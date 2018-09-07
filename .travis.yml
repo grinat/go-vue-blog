@@ -1,0 +1,16 @@
+sudo: required
+
+jobs:
+  include:
+  - stage: Build and Testing
+    script:
+    - sh ./scripts/install-docker.sh
+    - sh ./scripts/test-from-travis.sh
+  - stage: Deploy
+    script:
+    - sh ./scripts/install-docker.sh
+    - sh ./scripts/deploy-from-travis.sh
+
+branches:
+  only:
+  - master
