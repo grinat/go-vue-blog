@@ -9,7 +9,6 @@ jobs:
     - sh ./scripts/push-from-trevis.sh
   - stage: Deploy
     script:
-    - sh ./scripts/install-docker.sh
     - sh ./scripts/deploy-from-travis.sh
 
 branches:

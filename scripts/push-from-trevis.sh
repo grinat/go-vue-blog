@@ -4,6 +4,8 @@ SERVICE_PREFIX='go-vue-blog'
 
 docker login --username $DOCKER_U --password $DOCKER_P
 
+cd docker/prod
+
 docker-compose up
 
 # Push builded images

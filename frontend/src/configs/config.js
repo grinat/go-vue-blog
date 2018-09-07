@@ -12,7 +12,7 @@ export const DOMAIN = (function () {
   }
 }())
 
-export const DOMAIN_IN_CONTAINER = 'http://blog.api:9050'
+export const DOMAIN_IN_CONTAINER = 'http://go-vue-blog.api:9050'
 
 export const ROOT_API = (function () {
   if (typeof window !== "undefined") {
