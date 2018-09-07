@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	log.Println("Waiting for launch")
+	log.Println("Waiting for launch...")
 	app.Run()
 }

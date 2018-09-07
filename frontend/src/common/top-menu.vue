@@ -9,7 +9,7 @@
           :to="{path: '/'}"
           class="navbar-item brand-text"
         >
-          Brand
+          My brand
         </router-link>
         <span
           class="navbar-burger burger"
