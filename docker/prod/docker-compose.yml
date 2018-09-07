@@ -1,0 +1,53 @@
+version: '2'
+
+volumes:
+  go-vue-blog-mongo-data:
+
+networks:
+  go-vue-blog:
+
+services:
+  go-vue-blog.nginx:
+    container_name: go-vue-blog-nginx
+    image: nginx:stable-alpine
+    volumes:
+    - ../../docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    - ../../docker/logs/nginx:/var/log/nginx
+    volumes_from:
+    - go-vue-blog.api
+    ports:
+    - 9010:80
+    networks: [go-vue-blog]
+
+  go-vue-blog.api:
+    container_name: go-vue-blog-api
+    build:
+      context: ../../
+      dockerfile: docker/go/Dockerfile
+    networks: [go-vue-blog]
+    volumes:
+     - ../../uploads:/go/src/go-vue-blog/uploads
+    environment:
+    - MONGO_URI=mongodb://bloger:Ismwo2137&2wnso@go-vue-blog.db.mongo:27017
+    - UPLOADS_DOMAIN=
+    - MONGO_DB=go-vue-blog
+
+  go-vue-blog.db.mongo:
+    image: mongo:4.1
+    networks: [go-vue-blog]
+    container_name: go-vue-blog-db-mongo
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=bloger
+    - MONGO_INITDB_ROOT_PASSWORD=Ismwo2137&2wnso
+    - MONGO_INITDB_DATABASE=go-vue-blog
+    ports:
+    - 9051:27017
+    volumes:
+    - go-vue-blog-mongo-data:/data/db
+
+  go-vue-blog.node:
+    container_name: go-vue-blog-node
+    build:
+      context: ../../
+      dockerfile: docker/node/Dockerfile
+    networks: [go-vue-blog]

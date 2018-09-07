@@ -1,0 +1,21 @@
+# docker-compose -f docker-compose.yml -f docker-compose.testing.yml up --abort-on-container-exit
+version: '2'
+
+volumes:
+  go-vue-blog-mongo-data-test:
+
+services:
+  go-vue-blog.api:
+    environment:
+    - MONGO_DB=go-vue-blog-testing
+
+  go-vue-blog.node.testing:
+    image: alekzonder/puppeteer:1.1.1
+    volumes:
+    - ../../frontend:/app
+    container_name: go-vue-blog-node-testing
+    environment:
+    - TESTING_HEADLESS=true
+    - TESTING_URL=http://go-vue-blog.nginx
+    networks: [go-vue-blog]
+    command: [sh, -c, "cd /app && (npm i || echo 'fail npm i') && npm run test"]

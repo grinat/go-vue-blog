@@ -1,0 +1,32 @@
+version: '2'
+
+volumes:
+  go-vue-blog-mongo-data:
+
+networks:
+  go-vue-blog:
+
+services:
+  go-vue-blog.db.mongo.dev:
+    image: mongo:4.1
+    networks: [go-vue-blog]
+    container_name: go-vue-blog-db-mongo-dev
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=bloger
+    - MONGO_INITDB_ROOT_PASSWORD=Ismwo2137&2wnso
+    - MONGO_INITDB_DATABASE=blog
+    volumes:
+    - go-vue-blog-mongo-data:/data/db
+    ports:
+    - 9051:27017
+
+  go-vue-blog.nginx.dev:
+    container_name: go-vue-blog-nginx-dev
+    image: nginx:stable-alpine
+    volumes:
+    - ../../docker/nginx-dev/nginx.conf:/etc/nginx/nginx.conf
+    - ../../docker/logs/nginx:/var/log/nginx
+    - ../../uploads:/go/src/go-vue-blog/uploads
+    ports:
+    - 9052:80
+    networks: [go-vue-blog]
