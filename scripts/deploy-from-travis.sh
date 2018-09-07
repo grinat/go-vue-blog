@@ -10,7 +10,7 @@ sed -i "s/_88_/ RSA PRIVATE KEY/g" ssh_key.txt
 chmod 600 ssh_key.txt
 
 # Get debug info about ssh connection and project dir
-ssh -v -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR && git branch && ls"
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR && git branch && ls"
 
 # Git hard reset all changes and pull
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR && git fetch --all && git reset --hard"
