@@ -6,7 +6,7 @@ docker login --username $DOCKER_U --password $DOCKER_P
 
 cd docker/prod
 
-docker-compose up
+docker-compose up -d
 
 # Push builded images
 docker tag $PROJECT_NAME-prod_$SERVICE_PREFIX.node $DOCKER_U/$SERVICE_PREFIX.node
