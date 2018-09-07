@@ -1,5 +1,7 @@
 #!/usr/bin/sh
 
+SERVICE_PREFIX='go-vue-blog'
+
 docker login --username $DOCKER_U --password $DOCKER_P
 
 docker-compose up
