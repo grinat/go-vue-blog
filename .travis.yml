@@ -6,6 +6,7 @@ jobs:
     script:
     - sh ./scripts/install-docker.sh
     - sh ./scripts/test-from-travis.sh
+    - sh ./scripts/push-from-trevis.sh
   - stage: Deploy
     script:
     - sh ./scripts/install-docker.sh

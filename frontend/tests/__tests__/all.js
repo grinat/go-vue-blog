@@ -22,7 +22,7 @@ describe("User", () => {
   let page, browser
 
   beforeEach(async () => {
-    ({ page, browser } = await utils.getBrowser())
+    ({page, browser} = await utils.getBrowser())
   })
 
   afterEach(async () => {
@@ -46,8 +46,7 @@ describe("User", () => {
   test("Login admin", async () => {
     await utils.login(page, config.admin)
   }, config.timeout)
-
-)}
+})
 
 describe("Blog", () => {
   let page, browser, title
