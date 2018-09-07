@@ -1,0 +1,15 @@
+.DS_Store
+**/node_modules
+src/backend/**/vendor/*/
+tmp/
+**/logs/nginx
+uploads/*
+!uploads/.gitkeep
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
