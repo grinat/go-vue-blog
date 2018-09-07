@@ -20,11 +20,16 @@ ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR 
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose down"
 
 # Pull images
-#ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker pull $DOCKER_U/$PROJECT_NAME.node"
-#ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker pull $DOCKER_U/$PROJECT_NAME.api"
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker pull $DOCKER_U/go-vue-blog-node"
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker pull $DOCKER_U/go-vue-blog-api"
 
+# Run pulled
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.hub.yml up -d"
+
+# For build on server
 # Rebuild images
-ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose build"
 
+# ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.build.yml build"
 # Start docker
-ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose up -d"
+
+# ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.build.yml up -d"

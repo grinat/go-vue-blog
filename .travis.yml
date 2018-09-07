@@ -4,8 +4,7 @@ jobs:
   include:
   - stage: Build and Testing
     script:
-    - sh ./scripts/install-docker.sh
-    - sh ./scripts/test-from-travis.sh
+    - sh ./scripts/test-and-build-on-travis.sh
     - sh ./scripts/push-from-trevis.sh
   - stage: Deploy
     script:

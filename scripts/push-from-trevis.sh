@@ -1,18 +1,12 @@
 #!/usr/bin/sh
 
-SERVICE_PREFIX='go-vue-blog'
+docker ps -a
 
 docker login --username $DOCKER_U --password $DOCKER_P
 
-cd docker/prod
-
-docker-compose up -d
-
 # Push builded images
-#docker tag $PROJECT_NAME-prod_$SERVICE_PREFIX.node $DOCKER_U/$SERVICE_PREFIX.node
-#docker tag $PROJECT_NAME-prod_$SERVICE_PREFIX.api $DOCKER_U/$SERVICE_PREFIX.api
+docker tag go-vue-blog-prod_go-vue-blog.api $DOCKER_U/go-vue-blog-api
+docker tag go-vue-blog-prod_go-vue-blog.node $DOCKER_U/go-vue-blog-node
 
-#docker push $DOCKER_U/$SERVICE_PREFIX.node
-#docker push $DOCKER_U/$SERVICE_PREFIX.api
-
-docker-compose down
+docker push $DOCKER_U/go-vue-blog-api
+docker push $DOCKER_U/go-vue-blog-node

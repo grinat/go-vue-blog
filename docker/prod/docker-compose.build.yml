@@ -1,0 +1,13 @@
+# docker-compose -f docker-compose.base.yml -f docker-compose.build.yml up
+version: '2'
+
+services:
+  go-vue-blog.api:
+    build:
+      context: ../../
+      dockerfile: docker/go/Dockerfile
+
+  go-vue-blog.node:
+    build:
+      context: ../../
+      dockerfile: docker/node/Dockerfile

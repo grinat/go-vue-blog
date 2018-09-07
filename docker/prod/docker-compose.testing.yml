@@ -1,4 +1,4 @@
-# docker-compose -f docker-compose.yml -f docker-compose.testing.yml up --abort-on-container-exit
+# docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml up --abort-on-container-exit go-vue-blog.node.testing
 version: '2'
 
 volumes:

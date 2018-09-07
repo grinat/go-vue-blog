@@ -1,0 +1,9 @@
+# docker-compose -f docker-compose.base.yml -f docker-compose.hub.yml up
+version: '2'
+
+services:
+  go-vue-blog.api:
+    image: grinat0/go-vue-blog-api:latest
+
+  go-vue-blog.node:
+    image: grinat0/go-vue-blog-node:latest
