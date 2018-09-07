@@ -36,7 +36,7 @@
           this.show(this.$store.state.snackMessage)
         }
       },
-      show ({message, type = 'danger', duration = 5000}) {
+      show ({ message, type = 'danger', duration = 5000 }) {
         this.type = type
         if (message && message.message) {
           // error

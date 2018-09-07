@@ -1,23 +1,22 @@
 import Vue from 'vue'
-import {createApp} from './app'
-import {routerHandlers, handleBeforeEach} from './utils/routerHandlers'
+import { createApp } from './app'
+import { handleBeforeEach, routerHandlers } from './utils/routerHandlers'
+import ProgressBar from './components/progress/progress'
+import Snack from './components/snack/snack'
+import VueGlobalEmitter from 'vue-global-emitter'
+import { handleRenderError, handleRouteError } from "./utils/errorHandlers"
+import { prepareInitialState } from "./utils/prepareInitialState"
 
 import 'buefy/lib/buefy.css'
 import './assets/style/main.scss'
 
-import ProgressBar from './components/progress/progress'
-import Snack from './components/snack/snack'
-import VueGlobalEmitter from 'vue-global-emitter'
-import {handleRenderError, handleRouteError} from "./utils/errorHandlers";
-import {prepareInitialState} from "./utils/prepareInitialState";
+Vue.use(VueGlobalEmitter, { debug: true })
 
-Vue.use(VueGlobalEmitter, {debug: true})
-
-const {app, router, store} = createApp()
+const { app, router, store } = createApp()
 
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
 document.body.appendChild(bar.$el)
-const snack = new Vue({store, render: h => h(Snack)}).$mount()
+const snack = new Vue({ store, render: h => h(Snack) }).$mount()
 document.body.appendChild(snack.$el)
 
 // prime the store with server-initialized state.
@@ -32,14 +31,14 @@ if (window.__INITIAL_STATE__) {
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate (to, from, next) {
     // skip on router.replace()
     if (this.$router.isReplace) {
       next()
       return
     }
 
-    const {asyncData} = this.$options
+    const { asyncData } = this.$options
     bar.start()
     if (asyncData) {
       asyncData({
@@ -64,12 +63,12 @@ Vue.mixin({
   }
 })
 
-router.onError(error => handleRouteError({error, router, store}))
+router.onError(error => handleRouteError({ error, router, store }))
 
 router.beforeEach((to, from, next) => handleBeforeEach(to, from, next, store))
 
 if (process.env.NODE_ENV === 'production') {
-  Vue.config.errorHandler = (err, vm, info) => handleRenderError({err, vm, info, store})
+  Vue.config.errorHandler = (err, vm, info) => handleRenderError({ err, vm, info, store })
 }
 
 Vue.config.productionTip = false
@@ -95,7 +94,7 @@ router.onReady(() => {
 
     bar.start()
     Promise.all(
-      activated.map(c => routerHandlers(c, {store, from, to}))
+      activated.map(c => routerHandlers(c, { store, from, to }))
     ).then(() => {
       if (to && to.name && to.name !== 'error') {
         store.commit('mutateError', null)

@@ -1,5 +1,5 @@
-export function buildURLQueryFromRoute(route = {}) {
-  let {query = {}} = route
+export function buildURLQueryFromRoute (route = {}) {
+  let { query = {} } = route
   let url = ''
   for (let key in query) {
     if (query[key] === "undefined") {
@@ -21,9 +21,8 @@ export function buildURLQueryFromRoute(route = {}) {
   return url
 }
 
-
-export function getRouteCopy(route = {}) {
-  let {name = '', params = {}, query = {}} = route
+export function getRouteCopy (route = {}) {
+  let { name = '', params = {}, query = {} } = route
   return {
     name,
     params: Object.assign({}, params),

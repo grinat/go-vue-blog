@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import {USER_DATA} from '../configs/config'
+import { USER_DATA } from '../configs/config'
 
 const findDefaultHandler = (v, id) => {
   if (v && v.hasOwnProperty('id')) {
@@ -12,7 +12,7 @@ const findDefaultHandler = (v, id) => {
 
 export default {
   snackMessage: (state, message, type = 'danger', duration = 5000) => {
-    state.snackMessage = Object.assign({}, {createdAt: +new Date(), message, type, duration})
+    state.snackMessage = Object.assign({}, { createdAt: +new Date(), message, type, duration })
   },
   userSetAuthData: (state, data) => {
     state._userData = Object.assign({}, data)
@@ -38,7 +38,7 @@ export default {
   needReLogin: (state, val) => {
     state.needReLogin = val
   },
-  deleteModel: (state, {endpoint, ids = [], findFunc}) => {
+  deleteModel: (state, { endpoint, ids = [], findFunc }) => {
     if (state.endpoints[endpoint] && state.endpoints[endpoint].data && Array.isArray(state.endpoints[endpoint].data)) {
       const origin = state.endpoints[endpoint].data.slice()
       const findHandler = findFunc || findDefaultHandler
@@ -53,15 +53,15 @@ export default {
       delete state.endpoints[endpoint]
     }
   },
-  updateCache: (state, {endpoint, cache = 0}) => {
+  updateCache: (state, { endpoint, cache = 0 }) => {
     state.cache[endpoint] = +Date.now() + cache
   },
-  updateEndpoint: (state, {response, endpoint, action = 'replace', id, findFunc}) => {
-    const newData = response.data || {data: []}
+  updateEndpoint: (state, { response, endpoint, action = 'replace', id, findFunc }) => {
+    const newData = response.data || { data: [] }
     const endpointsData = Object.assign({}, state.endpoints)
 
     if (!endpointsData[endpoint]) {
-      endpointsData[endpoint] = {data: [], _meta: {}}
+      endpointsData[endpoint] = { data: [], _meta: {} }
     }
     if (action !== 'replace' && !endpointsData[endpoint].data) {
       endpointsData[endpoint].data = []
@@ -118,7 +118,7 @@ export default {
     if (error === null) {
       state._error = null
     } else {
-      let formatError = {title: 'Error', message: '', apiUrl: '', status: 0}
+      let formatError = { title: 'Error', message: '', apiUrl: '', status: 0 }
       if (error && error.response) {
         // http headers
         if (error.response.status) {

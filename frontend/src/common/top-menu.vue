@@ -33,6 +33,40 @@
           >
             Home
           </router-link>
+          <router-link
+            class="navbar-item articles"
+            :to="{name: 'blog.articles'}"
+          >
+            Articles
+          </router-link>
+          <router-link
+            v-if="$store.getters.isGuest"
+            class="navbar-item"
+            :to="{name: 'user.login'}"
+          >
+            Login
+          </router-link>
+          <router-link
+            v-if="$store.getters.isGuest"
+            class="navbar-item"
+            :to="{name: 'user.register'}"
+          >
+            Register
+          </router-link>
+          <router-link
+            v-if="$store.getters.isAdmin"
+            class="navbar-item create-article"
+            :to="{name: 'blog.article.create'}"
+          >
+            Create Article
+          </router-link>
+          <a
+            v-if="!$store.getters.isGuest"
+            class="navbar-item"
+            @click="onLogout()"
+          >
+            Logout
+          </a>
         </div>
       </div>
     </div>
@@ -44,6 +78,12 @@
     name: 'top-menu',
     data: () => ({
       menuActive: false
-    })
+    }),
+    methods: {
+      onLogout () {
+        this.$router.push({ name: 'blog.home' })
+        this.$store.commit('userDelAuthData')
+      }
+    }
   }
 </script>

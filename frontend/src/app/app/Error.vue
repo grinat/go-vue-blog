@@ -1,13 +1,15 @@
 <template>
-  <div class="error"></div>
+  <div class="error">
+    <g-error :error="error"></g-error>
+  </div>
 </template>
 
 <script>
   export default {
     name: 'error',
     computed: {
-      isAutorisationError () {
-        return this.error && this.error.status === 401
+      error () {
+        return this.$store.getters.getError
       }
     },
     asyncData () {

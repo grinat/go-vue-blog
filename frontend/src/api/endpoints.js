@@ -1,5 +1,5 @@
-import {ROOT_API} from '../configs/config'
-import {buildURLQueryFromRoute} from '../utils/url'
+import { ROOT_API } from '../configs/config'
+import { buildURLQueryFromRoute } from '../utils/url'
 
 export const user = {
   login: () => `${ROOT_API}/user/login`,
@@ -12,5 +12,5 @@ export const blog = {
   articleCreate: () => `${ROOT_API}/blog/article`,
   articleUpdate: (id) => `${ROOT_API}/blog/article/${id}`,
   articleDelete: (id) => `${ROOT_API}/blog/article/${id}`,
-  article: ({params: {id}}) => `${ROOT_API}/blog/article/${id}`
+  article: ({ params: { id } }) => `${ROOT_API}/blog/article/${id}`
 }

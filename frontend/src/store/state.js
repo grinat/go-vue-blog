@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
 export default {
   _userData: savedData.user,
   _error: null,
-  _redirectUrl: {name: 'blog.home'},
+  _redirectUrl: { name: 'blog.home' },
   endpoints: {},
   cache: {},
   header: {

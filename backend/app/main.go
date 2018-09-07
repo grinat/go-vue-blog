@@ -9,11 +9,31 @@ import (
 	"go-vue-blog/backend/common"
 	"os"
 	"go-vue-blog/backend/auth"
+	"time"
+	"fmt"
 )
 
+var dbConnectionRepeats = 0
+
+const MAX_DB_RECONNECTS_ON_RUN = 60
+
 func Run() {
+	dbConnectionRepeats++
+	con, err := GetDBConnection()
+	if err != nil {
+		// wait until docker mongo service was started
+		if dbConnectionRepeats <= MAX_DB_RECONNECTS_ON_RUN {
+			fmt.Println(err)
+			fmt.Println("Cant connect to db, waiting... Repeat", dbConnectionRepeats, "of", MAX_DB_RECONNECTS_ON_RUN)
+			time.Sleep(1 * time.Millisecond)
+			Run()
+			return
+		} else {
+			panic(err)
+		}
+	}
+
 	router := httprouter.New()
-	con := GetDB()
 	prefix := "/api"
 
 	auth.SetDB(con)
@@ -25,9 +45,10 @@ func Run() {
 	
 	m := common.NewMiddleware(router, "")
 	http.ListenAndServe(":9050", m)
+	fmt.Println("Server run")
 }
 
-func GetDB() *mgo.Database {
+func GetDBConnection() (con *mgo.Database, err error) {
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
 		mongoURI = "mongodb://bloger:Ismwo2137&2wnso@localhost:9051"
@@ -37,9 +58,10 @@ func GetDB() *mgo.Database {
 		db = "go-vue-blog"
 	}
 	session, err := mgo.Dial(mongoURI)
-	session.SetMode(mgo.Monotonic, true)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return session.Clone().DB(db)
+	session.SetMode(mgo.Monotonic, true)
+	con = session.Clone().DB(db)
+	return con, nil
 }

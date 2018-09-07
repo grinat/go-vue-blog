@@ -1,5 +1,5 @@
 function getHeaderOptions (vm) {
-  const {title} = vm.$options
+  const { title } = vm.$options
   const header = {}
   if (title) {
     header.title = typeof title === 'function'

@@ -1,7 +1,6 @@
-import {getRouteCopy} from './url'
-import {handleAccessError} from './errorHandlers'
+import { handleAccessError } from './errorHandlers'
 
-export function routerHandlers (c, {store, from, to}) {
+export function routerHandlers (c, { store, from, to }) {
   let methods = Object.create(null) // c.methods
   if (c.mixins) {
     c.mixins.forEach((mixin) => {
@@ -19,7 +18,7 @@ export function routerHandlers (c, {store, from, to}) {
     }
   }
   if (c.asyncData) {
-    return c.asyncData({store, route: to, fromRoute: from, methods, ctx: c})
+    return c.asyncData({ store, route: to, fromRoute: from, methods, ctx: c })
   } else if (c.mixins) {
     let last = null
     c.mixins.forEach((mixin) => {
@@ -34,13 +33,13 @@ export function routerHandlers (c, {store, from, to}) {
   return Promise.resolve(true)
 }
 
-export function handleBeforeEach(to, from, next, store) {
+export function handleBeforeEach (to, from, next, store) {
   if (to.meta && to.meta.needRoles) {
     if (to.meta.needRoles.indexOf(store.getters.userRole) > -1) {
       next()
     } else {
       const onAccessError = to.meta && to.meta.onAccessError ? to.meta.onAccessError : handleAccessError
-      onAccessError({store, from, to, next})
+      onAccessError({ store, from, to, next })
     }
   } else {
     next()

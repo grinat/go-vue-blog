@@ -6,28 +6,54 @@ import MainLayout from '../common/layout/main-layout'
 import AppError from '../app/app/Error'
 
 import BlogHome from '../app/blog/Home'
+import BlogArticles from '../app/blog/Articles'
+import BlogArticle from '../app/blog/Article'
+import BlogArticleUpdate from '../app/blog/ArticleUpdate'
+
+import UserLogin from '../app/user/Login'
+import UserRegister from '../app/user/Register'
 
 Vue.use(Router)
 
-export function createRouter() {
+export function createRouter () {
   let RouterInstance = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     linkActiveClass: 'is-active',
     routes: [
       {
-        path: '/app', name: 'app', component: MainLayout,
+        path: '/app',
+        name: 'app',
+        component: MainLayout,
         children: [
-          {path: 'error', name: 'error', component: AppError}
+          { path: 'error', name: 'error', component: AppError }
         ]
       },
       {
-        path: '/', name: 'blog', component: MainLayout,
+        path: '/',
+        name: 'blog',
+        component: MainLayout,
         children: [
-          {path: 'blog/home', alias: '', name: 'blog.home', component: BlogHome}
+          { path: '', name: 'blog.home', component: BlogHome },
+          { path: 'blog/articles', name: 'blog.articles', component: BlogArticles },
+          { path: 'blog/article-create', name: 'blog.article.create', component: BlogArticleUpdate, meta: { needRoles: ['admin'] } },
+          { path: 'blog/article-update/:id', name: 'blog.article.update', component: BlogArticleUpdate, meta: { needRoles: ['admin'] } },
+          { path: 'blog/:id-:slug', name: 'blog.article', component: BlogArticle }
         ]
       },
-      {path: '*', redirect: {path: '/'}}
+      {
+        path: '/user',
+        name: 'user',
+        component: MainLayout,
+        children: [
+          { path: 'login', name: 'user.login', component: UserLogin, meta: { needRoles: ['guest'] } },
+          { path: 'register', name: 'user.register', component: UserRegister, meta: { needRoles: ['guest'] } }
+        ]
+      },
+      {
+        path: '*',
+        redirect: { name: 'blog.home' }
+      }
     ]
   })
 

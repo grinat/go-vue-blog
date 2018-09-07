@@ -1,4 +1,4 @@
-export default function deepCopy (obj) {
+export function deepCopy (obj) {
   let cache = []
   let copy = JSON.parse(JSON.stringify(obj, function (key, value) {
     if (typeof value === 'object' && value !== null) {

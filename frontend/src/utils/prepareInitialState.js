@@ -1,7 +1,7 @@
-import {DOMAIN, DOMAIN_IN_CONTAINER} from "../configs/config";
-import {USER_DATA} from "../store/state";
+import { DOMAIN, DOMAIN_IN_CONTAINER } from "../configs/config"
+import { USER_DATA } from "../store/state"
 
-export function prepareInitialState(state) {
+export function prepareInitialState (state) {
   // set user from store
   const userData = localStorage.getItem(USER_DATA) ? JSON.parse(localStorage.getItem(USER_DATA)) : null
   if (userData) {

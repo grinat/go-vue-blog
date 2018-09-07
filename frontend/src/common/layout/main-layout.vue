@@ -17,7 +17,7 @@
   export default {
     name: 'main-layout',
     computed: {
-      error() {
+      error () {
         return this.$store.getters.getError
       }
     }

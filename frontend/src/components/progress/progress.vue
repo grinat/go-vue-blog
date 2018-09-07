@@ -26,7 +26,7 @@
     props: {
       height: {
         type: String,
-        default: '4px',
+        default: '4px'
       },
       isGlobal: {
         type: Boolean,
@@ -34,7 +34,7 @@
       }
     },
     computed: {
-      barClass() {
+      barClass () {
         let classes = ['mdl-progress mdl-js-progress mdl-progress__indeterminate']
         if (!this.canSuccess) {
           classes.push('fail')
@@ -46,7 +46,7 @@
       }
     },
     methods: {
-      start() {
+      start () {
         this.show = true
         this.canSuccess = true
         if (this._timer) {
@@ -64,44 +64,44 @@
         }, 100)
         return this
       },
-      startOrContinue() {
+      startOrContinue () {
         if (!this.show) {
           return this.start()
         } else {
           return this
         }
       },
-      set(num) {
+      set (num) {
         this.show = true
         this.canSuccess = true
         this.percent = Math.floor(num)
         return this
       },
-      get() {
+      get () {
         return Math.floor(this.percent)
       },
-      increase(num) {
+      increase (num) {
         this.percent = this.percent + Math.floor(num)
         if (this.percent < 5) {
           this.percent = 5
         }
         return this
       },
-      decrease(num) {
+      decrease (num) {
         this.percent = this.percent - Math.floor(num)
         return this
       },
-      finish() {
+      finish () {
         this.percent = 100
         this._hideAppBootsrapLoader = true
         this.hide()
         return this
       },
-      pause() {
+      pause () {
         clearInterval(this._timer)
         return this
       },
-      hide() {
+      hide () {
         clearInterval(this._timer)
         this._timer = null
         setTimeout(() => {
@@ -117,7 +117,7 @@
         }, 100)
         return this
       },
-      fail() {
+      fail () {
         this.canSuccess = false
         return this
       }

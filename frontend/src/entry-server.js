@@ -1,6 +1,6 @@
-import {createApp} from './app'
-import {handleBeforeEach, routerHandlers} from './utils/routerHandlers'
-import {USER_DATA} from "./configs/config";
+import { createApp } from './app'
+import { handleBeforeEach, routerHandlers } from './utils/routerHandlers'
+import { USER_DATA } from "./configs/config"
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -12,13 +12,12 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default context => {
   return new Promise((resolve, reject) => {
     const s = isDev && Date.now()
-    const {app, router, store} = createApp()
-
-    const {url, cookies} = context
-    const {fullPath} = router.resolve(url).route
+    const { app, router, store } = createApp()
+    const { url, cookies } = context
+    const { fullPath } = router.resolve(url).route
 
     if (fullPath !== url) {
-      return reject({url: fullPath})
+      return reject({ url: fullPath })
     }
 
     router.beforeEach((to, from, next) => handleBeforeEach(to, from, next, store))
@@ -31,7 +30,7 @@ export default context => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
-        return reject({code: 404})
+        return reject({ code: 404 })
       }
       // set cookies
       if (cookies && cookies[USER_DATA]) {
@@ -42,7 +41,7 @@ export default context => {
       // which is resolved when the action is complete and store state has been
       // updated.
       Promise.all(
-        matchedComponents.map(c => routerHandlers(c, {store, to: router.currentRoute}))
+        matchedComponents.map(c => routerHandlers(c, { store, to: router.currentRoute }))
       ).then(() => {
         store.commit('mutateError', null)
         isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)

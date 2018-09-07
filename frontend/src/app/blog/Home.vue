@@ -19,13 +19,13 @@
 </template>
 
 <script>
-  import {blog} from "../../api/endpoints";
+  import { blog } from "../../api/endpoints"
 
   export default {
     name: 'home',
     title: 'Home',
     methods: {
-      getEndpoint() {
+      getEndpoint () {
         return blog.main()
       }
     },
@@ -36,9 +36,9 @@
         )
       }
     },
-    asyncData({store, route, fromRoute, methods}) {
+    asyncData ({ store, route, fromRoute, methods }) {
       const endpoint = methods.getEndpoint()
-      return store.dispatch('updateUrlEndpoint', {endpoint})
+      return store.dispatch('updateUrlEndpoint', { endpoint })
     }
   }
 </script>

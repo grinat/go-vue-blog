@@ -28,7 +28,7 @@
     name: 'g-error',
     props: ['error'],
     computed: {
-      isAutorisationError() {
+      isAutorisationError () {
         return this.error && this.error.status === 401
       }
     }

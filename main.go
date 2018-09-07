@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	log.Println("Running go server")
+	log.Println("Waiting for launch")
 	app.Run()
 }

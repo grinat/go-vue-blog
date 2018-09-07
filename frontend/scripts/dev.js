@@ -16,7 +16,7 @@ const errAndExit = (err) => {
 }
 
 const closeAll = () => {
-  runners.forEach(({proc, name}) => {
+  runners.forEach(({ proc, name }) => {
     try {
       proc.kill('SIGHUP')
       console.log(name, 'stopped')

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import {getRouteCopy} from "../../utils/url";
+  import { getRouteCopy } from "../../utils/url"
 
   export default {
     name: 'app',
@@ -21,6 +21,9 @@
           this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
           this.$store.commit('needReLogin', false)
           this.$store.commit('userDelAuthData')
+          this.$router.push({
+            name: 'user.login'
+          })
         }
       }
     }
