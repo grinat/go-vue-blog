@@ -21,7 +21,9 @@ const utils = {
     let page = await browser.newPage()
     await page.setViewport({ width, height })
     await this.wait(config.navTimeout)
-    return {browser, page}
+    return {
+      browser, page
+    }
   },
   wait: async function (delay = 500) {
     return new Promise(resolve => {
@@ -29,6 +31,14 @@ const utils = {
         resolve(true)
       }, delay)
     })
+  },
+  login: async function (page, user = {}) {
+    await page.goto(config.url + '/user/login')
+    await page.type("input[name=email]", user.email)
+    await page.type("input[name=pass]", user.pass)
+    await page.click("button[type=submit]")
+    await this.wait(config.navTimeout)
+    // await page.waitForNavigation()
   },
   getText: async function (page, selector) {
     if (selector) {
