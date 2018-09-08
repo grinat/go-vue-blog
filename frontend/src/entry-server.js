@@ -14,27 +14,25 @@ export default context => {
     const s = isDev && Date.now()
     const { app, router, store } = createApp()
     const { url, cookies } = context
-    const { fullPath } = router.resolve(url).route
+    // set cookies
+    if (cookies && cookies[USER_DATA]) {
+      store.commit('userSetAuthData', JSON.parse(cookies[USER_DATA]))
+    }
 
+    const { fullPath } = router.resolve(url).route
     if (fullPath !== url) {
       return reject({ url: fullPath })
     }
 
     router.beforeEach((to, from, next) => handleBeforeEach(to, from, next, store))
-
     // set router's location
     router.push(url)
-
     // wait until router has resolved possible async hooks
     router.onReady(() => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
         return reject({ code: 404 })
-      }
-      // set cookies
-      if (cookies && cookies[USER_DATA]) {
-        store.commit('userSetAuthData', JSON.parse(cookies[USER_DATA]))
       }
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,

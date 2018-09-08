@@ -1,5 +1,5 @@
 export const USER_DATA = 'USER_DATA'
-export const CACHE_TIME = 15000
+export const CACHE_TIME = 0
 
 export const DOMAIN = (function () {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'testing') {

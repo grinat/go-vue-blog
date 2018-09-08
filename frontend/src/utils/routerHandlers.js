@@ -23,7 +23,7 @@ export function routerHandlers (c, { store, from, to }) {
     let last = null
     c.mixins.forEach((mixin) => {
       if (mixin.asyncData) {
-        last = mixin.asyncData({store, route: to, fromRoute: from, methods, ctx: c})
+        last = mixin.asyncData({ store, route: to, fromRoute: from, methods, ctx: c })
       }
     })
     if (last !== null) {
@@ -35,6 +35,7 @@ export function routerHandlers (c, { store, from, to }) {
 
 export function handleBeforeEach (to, from, next, store) {
   if (to.meta && to.meta.needRoles) {
+    console.log('role', store.getters.userRole, store.getters.userData)
     if (to.meta.needRoles.indexOf(store.getters.userRole) > -1) {
       next()
     } else {

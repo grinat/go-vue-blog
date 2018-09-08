@@ -15,7 +15,13 @@
     watch: {
       'needReLogin': 'onNeedReLogin'
     },
+    mounted () {
+      this.updateUserData()
+    },
     methods: {
+      updateUserData () {
+        // TODO
+      },
       onNeedReLogin (val) {
         if (val === true) {
           this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))

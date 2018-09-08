@@ -5,7 +5,9 @@
         class="card-content"
         v-if="isAutorisationError"
       >
-        <div>You need re login</div>
+        <div>
+          You need re login, <router-link :to="{name: 'user.login'}">go to login page</router-link>
+        </div>
       </div>
       <div
         class="card-content"

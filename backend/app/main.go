@@ -1,16 +1,16 @@
 package app
 
 import (
-	"go-vue-blog/backend/blog"
-	"github.com/julienschmidt/httprouter"
-	"net/http"
 	"github.com/globalsign/mgo"
-	"go-vue-blog/backend/user"
-	"go-vue-blog/backend/common"
-	"os"
+	"github.com/julienschmidt/httprouter"
 	"go-vue-blog/backend/auth"
+	"go-vue-blog/backend/blog"
+	"go-vue-blog/backend/common"
+	"go-vue-blog/backend/user"
+	"log"
+	"net/http"
+	"os"
 	"time"
-	"fmt"
 )
 
 var dbConnectionRepeats = 0
@@ -23,8 +23,7 @@ func Run() {
 	if err != nil {
 		// wait until docker mongo service was started
 		if dbConnectionRepeats <= MAX_DB_RECONNECTS_ON_RUN {
-			fmt.Println(err)
-			fmt.Println("Cant connect to db, waiting... Repeat", dbConnectionRepeats, "of", MAX_DB_RECONNECTS_ON_RUN)
+			log.Println("Cant connect to db", err, "waiting... Repeat", dbConnectionRepeats, "of", MAX_DB_RECONNECTS_ON_RUN)
 			time.Sleep(1 * time.Millisecond)
 			Run()
 			return
@@ -45,7 +44,7 @@ func Run() {
 	
 	m := common.NewMiddleware(router, "")
 	http.ListenAndServe(":9050", m)
-	fmt.Println("Server run")
+	log.Println("Server run")
 }
 
 func GetDBConnection() (con *mgo.Database, err error) {
