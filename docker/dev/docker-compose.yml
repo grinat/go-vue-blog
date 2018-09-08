@@ -1,7 +1,9 @@
+# docker volume create --name=go-vue-blog-mongo-data
 version: '2'
 
 volumes:
   go-vue-blog-mongo-data:
+    external: true
 
 networks:
   go-vue-blog:

@@ -1,6 +1,7 @@
 #!/usr/bin/sh
 
 CI_COMMIT_REF_NAME="master"
+BUILD_VERSION="travis-build-$TRAVIS_BUILD_NUMBER"
 
 echo $DEPLOY_SSH_KEY_PRIVA > ssh_key.txt
 
@@ -18,6 +19,9 @@ ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR 
 
 # Stop docker
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.hub.yml down"
+
+# Create backup of volumes
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker run --rm -v go-vue-blog-mongo-data:/data -v /var/backups/go-vue-blog:/backup ubuntu tar cvf /backup/go-vue-blog-mongo-data_$BUILD_VERSION.tar /data"
 
 # Pull images
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker pull $DOCKER_U/go-vue-blog-node"

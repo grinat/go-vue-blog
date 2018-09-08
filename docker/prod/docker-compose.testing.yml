@@ -1,9 +1,6 @@
 # docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml up --abort-on-container-exit go-vue-blog.node.testing
 version: '2'
 
-volumes:
-  go-vue-blog-mongo-data-test:
-
 services:
   go-vue-blog.api:
     environment:
