@@ -22,8 +22,8 @@
       updateUserData () {
         // TODO
       },
-      onNeedReLogin (val) {
-        if (val === true) {
+      onNeedReLogin (needReLogin) {
+        if (needReLogin && needReLogin.value === true) {
           this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
           this.$store.commit('needReLogin', false)
           this.$store.commit('userDelAuthData')

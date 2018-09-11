@@ -1,6 +1,6 @@
 export default {
   needReLogin: state => {
-    return state.needReLogin
+    return state._needReLogin
   },
   authToken: (state, getters) => {
     if (getters.userData !== null) {

@@ -27,6 +27,21 @@
         >
         {{label}}
       </label>
+      <div v-else-if="type=='fullHtmlEditor'">
+        <g-html-editor
+          :name="name"
+          :model="model"
+        ></g-html-editor>
+        <!--create hidden field for validation reason-->
+        <input
+          v-model="model[name]"
+          v-validate="validate"
+          class="input is-hidden"
+          :type="type"
+          :name="name"
+          :data-vv-as="label"
+        >
+      </div>
       <input
         v-else
         v-model="model[name]"

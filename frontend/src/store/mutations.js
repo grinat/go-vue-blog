@@ -36,7 +36,7 @@ export default {
     state._redirectUrl = Object.assign({}, route)
   },
   needReLogin: (state, val) => {
-    state.needReLogin = val
+    state._needReLogin = Object.assign({}, {value: val, createdAt: +new Date()})
   },
   deleteModel: (state, { endpoint, ids = [], findFunc }) => {
     if (state.endpoints[endpoint] && state.endpoints[endpoint].data && Array.isArray(state.endpoints[endpoint].data)) {

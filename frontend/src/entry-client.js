@@ -6,11 +6,12 @@ import Snack from './components/snack/snack'
 import VueGlobalEmitter from 'vue-global-emitter'
 import { handleRenderError, handleRouteError } from "./utils/errorHandlers"
 import { prepareInitialState } from "./utils/prepareInitialState"
-
+import componentsClient from './components/components-client'
 import 'buefy/lib/buefy.css'
 import './assets/style/main.scss'
 
 Vue.use(VueGlobalEmitter, { debug: true })
+Vue.use(componentsClient)
 
 const { app, router, store } = createApp()
 

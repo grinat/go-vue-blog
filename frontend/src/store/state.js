@@ -19,5 +19,5 @@ export default {
     description: ''
   },
   snackMessage: null,
-  needReLogin: false
+  _needReLogin: null
 }

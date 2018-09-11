@@ -1,6 +1,10 @@
+import Vue from 'vue'
 import { createApp } from './app'
 import { handleBeforeEach, routerHandlers } from './utils/routerHandlers'
 import { USER_DATA } from "./configs/config"
+import componentsServer from './components/components-server'
+
+Vue.use(componentsServer)
 
 const isDev = process.env.NODE_ENV !== 'production'
 

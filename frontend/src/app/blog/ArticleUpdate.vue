@@ -18,7 +18,7 @@
           label="Description"
           name="description"
           validate="required|min:10"
-          type="textarea"
+          type="fullHtmlEditor"
         ></g-field>
 
         <g-field
