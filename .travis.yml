@@ -4,11 +4,11 @@ jobs:
   include:
   - stage: Build and Testing
     script:
-    - sh ./scripts/test-and-build-on-travis.sh
-    - sh ./scripts/push-from-trevis.sh
+    - sh ./scripts/test-and-build-on-travis.sh || travis_terminate 1
+    - sh ./scripts/push-from-trevis.sh || travis_terminate 1
   - stage: Deploy
     script:
-    - sh ./scripts/deploy-from-travis.sh
+    - sh ./scripts/deploy-from-travis.sh || travis_terminate 1
 
 branches:
   only:
