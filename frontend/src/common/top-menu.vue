@@ -60,10 +60,17 @@
           >
             Create Article
           </router-link>
+          <router-link
+            v-if="!$store.getters.isGuest"
+            class="navbar-item create-article"
+            :to="{name: 'user.profile', params: { id: $store.getters.userData.id }}"
+          >
+            My profile
+          </router-link>
           <a
             v-if="!$store.getters.isGuest"
             class="navbar-item"
-            @click="onLogout()"
+            @click.prevent="onLogout()"
           >
             Logout
           </a>

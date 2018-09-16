@@ -12,31 +12,15 @@
           class="card-content"
           v-if="item"
         >
-          <h1 class="title">{{item.title}}</h1>
+          <h1 class="title">
+            <router-link
+              :to="{name: 'blog.article', params: {id: item.id, slug: item.slug}}"
+            >
+              {{item.title}}
+            </router-link>
+          </h1>
           <div class="content" v-html="item.description"></div>
         </div>
-        <footer class="card-footer">
-          <router-link
-            class="card-footer-item"
-            :to="{name: 'blog.article', params: {id: item.id, slug: item.slug}}"
-          >
-            Open
-          </router-link>
-          <router-link
-            class="card-footer-item"
-            v-if="$store.getters.isAdmin"
-            :to="{name: 'blog.article.update', params: {id: item.id}}"
-          >
-            Edit
-          </router-link>
-          <a
-            class="card-footer-item"
-            v-if="$store.getters.isAdmin"
-            @click="deleteItem(item)"
-          >
-            Remove
-          </a>
-        </footer>
       </div>
     </template>
     <template
@@ -62,17 +46,6 @@
     methods: {
       getEndpoint (route) {
         return blog.articles(route)
-      },
-      deleteItem ({ id }) {
-        this.$store.dispatch('deleteModel', {
-          url: blog.articleDelete(id),
-          endpoint: blog.articles(this.$route),
-          ids: [id]
-        }).then(r => {
-
-        }).catch(e => {
-          console.error(e)
-        })
       }
     },
     computed: {

@@ -15,4 +15,5 @@ func RegisterPackage(prefix string, r *httprouter.Router, con *mgo.Database)  {
 	r.POST(prefix + "/blog/article", ArticleCreate)
 	r.PATCH(prefix + "/blog/article/:id", ArticleUpdate)
 	r.DELETE(prefix + "/blog/article/:id", ArticleDelete)
+	r.GET(prefix + "/blog/articles-from-user/:userId", ArticleFromUserList)
 }

@@ -30,6 +30,7 @@
       <div v-else-if="type=='fullHtmlEditor'">
         <g-html-editor
           :name="name"
+          :type="type"
           :model="model"
         ></g-html-editor>
         <!--create hidden field for validation reason-->

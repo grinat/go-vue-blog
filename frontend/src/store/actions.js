@@ -1,8 +1,23 @@
 import api from '../api'
+import { user } from '../api/endpoints'
 import uuid from '../utils/uuid'
 import { CACHE_TIME } from '../configs/config'
 
 export default {
+  updateUserData: (context) => {
+    if (context.getters.isGuest === true) {
+      return Promise.resolve(null)
+    }
+    const endpoint = user.profile(context.getters.userData.id)
+    return api.get(
+      context.getters.authToken, endpoint, {}, context
+    ).then(response => {
+      context.commit('userSetAuthData', response.data)
+      return response
+    }).catch(e => {
+      return Promise.reject(e.response)
+    })
+  },
   updateUrlEndpoint: (context, { url, endpoint, params, cache = CACHE_TIME, offline = false }) => {
     if (offline === true) {
       if (context.state.endpoints[endpoint]) {
@@ -32,18 +47,13 @@ export default {
         return Promise.reject(e.response)
     })
   },
-  createModel: (context, { url, data, endpoint, modelEndpointFunc, cache = CACHE_TIME, params, action = 'append', offline = false }) => {
+  createModel: (context, { url, data, endpoint, cache = CACHE_TIME, params, action = 'append', offline = false }) => {
     if (offline === true) {
       data._storeUUID = uuid.generate()
       const offlineResponse = { data }
       if (endpoint) {
         context.commit('updateEndpoint', { response: offlineResponse, endpoint, action })
         context.commit('updateCache', { endpoint, cache })
-      }
-      if (modelEndpointFunc) {
-        const modelEndpoint = modelEndpointFunc(offlineResponse)
-        context.commit('updateEndpoint', { endpoint: modelEndpoint, response: offlineResponse, action: 'replace' })
-        context.commit('updateCache', { endpoint: modelEndpoint, cache })
       }
       return Promise.resolve(offlineResponse)
     }
@@ -55,17 +65,12 @@ export default {
         context.commit('updateEndpoint', { response, endpoint, action })
         context.commit('updateCache', { endpoint, cache })
       }
-      if (modelEndpointFunc) {
-        const modelEndpoint = modelEndpointFunc(response)
-        context.commit('updateEndpoint', { endpoint: modelEndpoint, response, action: 'replace' })
-        context.commit('updateCache', { endpoint: modelEndpoint, cache })
-      }
       return response
     }).catch(e => {
       return Promise.reject(e.response || e)
     })
   },
-  updateModel: (context, { url, data, id, endpoint, modelEndpointFunc, cache = CACHE_TIME, params, action = 'replaceSame', offline = false }) => {
+  updateModel: (context, { url, data, id, endpoint, cache = CACHE_TIME, params, action = 'replaceSame', offline = false }) => {
     if (offline === true) {
       if (!data.hasOwnProperty('_storeUUID')) {
         data._storeUUID = uuid.generate()
@@ -73,11 +78,6 @@ export default {
       const offlineResponse = { data }
       if (endpoint) {
         context.commit('updateEndpoint', { response: offlineResponse, id, endpoint, action: 'replaceSame' })
-      }
-      if (modelEndpointFunc) {
-        const modelEndpoint = modelEndpointFunc(offlineResponse)
-        context.commit('updateEndpoint', { endpoint: modelEndpoint, response: offlineResponse, action: 'replace' })
-        context.commit('updateCache', { endpoint: modelEndpoint, cache })
       }
       return Promise.resolve(offlineResponse)
     }
@@ -88,26 +88,15 @@ export default {
       if (endpoint) {
         context.commit('updateEndpoint', { response, id, endpoint, action: 'replaceSame' })
       }
-      if (modelEndpointFunc) {
-        const modelEndpoint = modelEndpointFunc(response)
-        context.commit('updateEndpoint', { endpoint: modelEndpoint, response, action: 'replace' })
-        context.commit('updateCache', { endpoint: modelEndpoint, cache })
-      }
       return response
     }).catch(e => {
       return Promise.reject(e.response || e)
     })
   },
-  deleteModel: (context, { url, endpoint, ids, params, modelEndpointFunc, offline = false }) => {
+  deleteModel: (context, { url, endpoint, ids, params, offline = false }) => {
     if (offline === true) {
       if (endpoint) {
         context.commit('deleteModel', { endpoint, ids })
-      }
-      if (modelEndpointFunc) {
-        ids.forEach(id => {
-          let removeEndpoint = modelEndpointFunc(id)
-          context.commit('deleteModel', { endpoint: removeEndpoint })
-        })
       }
       return Promise.resolve(true)
     }

@@ -12,6 +12,7 @@ import BlogArticleUpdate from '../app/blog/ArticleUpdate'
 
 import UserLogin from '../app/user/Login'
 import UserRegister from '../app/user/Register'
+import UserProfile from '../app/user/Profile'
 
 Vue.use(Router)
 
@@ -31,7 +32,6 @@ export function createRouter () {
       },
       {
         path: '/',
-        name: 'blog',
         component: MainLayout,
         children: [
           { path: '', name: 'blog.home', component: BlogHome },
@@ -47,7 +47,8 @@ export function createRouter () {
         component: MainLayout,
         children: [
           { path: 'login', name: 'user.login', component: UserLogin, meta: { needRoles: ['guest'] } },
-          { path: 'register', name: 'user.register', component: UserRegister, meta: { needRoles: ['guest'] } }
+          { path: 'register', name: 'user.register', component: UserRegister, meta: { needRoles: ['guest'] } },
+          { path: 'profile/:id', name: 'user.profile', component: UserProfile }
         ]
       },
       {

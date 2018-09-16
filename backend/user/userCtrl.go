@@ -52,3 +52,17 @@ func UserLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	model.Scenario = auth.ScenarioOwnerEdit
 	common.Out(&model, w, r)
 }
+
+func UserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	model := auth.User{}
+	err := common.FindById(&model, ps.ByName("id"))
+	if err != nil {
+		common.HandleError(err, w, 404)
+	} else {
+		identify := auth.GetIdentify(r)
+		if identify.Id == model.Id {
+			model.Scenario = auth.ScenarioOwnerEdit
+		}
+		common.Out(model, w, r)
+	}
+}

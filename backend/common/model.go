@@ -137,9 +137,10 @@ func RemoveById(model Model, id string) error  {
 	return nil
 }
 
-func FindAllByReq(r *http.Request, model Model, models interface{}, meta *ModelMeta) error {
+func FindAllByReq(q *bson.M, r *http.Request, model Model, models interface{}, meta *ModelMeta) error {
 	db := model.GetDB()
-	perPage := 2
+	perPage := 10
+	sort := "-_id"
 	page := 1
 	for k, v := range r.URL.Query(){
 		if k == "per-page" {
@@ -148,9 +149,12 @@ func FindAllByReq(r *http.Request, model Model, models interface{}, meta *ModelM
 		if k == "page" {
 			page, _ = strconv.Atoi(v[0])
 		}
+		if k == "sort" {
+			sort = PreventInjection(v[0])
+		}
 	}
 
-	totalCount, err := db.C(model.GetCollection()).Find(nil).Count()
+	totalCount, err := db.C(model.GetCollection()).Find(q).Count()
 	if err != nil {
 		return err
 	}
@@ -165,7 +169,7 @@ func FindAllByReq(r *http.Request, model Model, models interface{}, meta *ModelM
 		skip = 0
 	}
 
-	err = db.C(model.GetCollection()).Find(nil).Limit(perPage).Skip(skip).All(models)
+	err = db.C(model.GetCollection()).Find(q).Limit(perPage).Skip(skip).Sort(sort).All(models)
 	if err != nil {
 		return err
 	}

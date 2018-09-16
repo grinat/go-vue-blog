@@ -75,6 +75,16 @@ if (process.env.NODE_ENV === 'production') {
 Vue.config.productionTip = false
 Vue.config.devtools = true
 
+// temporary hack for serve mode
+if (process.env.NODE_ENV === 'development') {
+  const path = window.location.pathname
+  router.push({path: '/reload-route'}, () => {
+    setTimeout(() => {
+      router.push(path)
+    }, 0)
+  })
+}
+
 // wait until router has resolved all async before hooks
 // and async components...
 router.onReady(() => {

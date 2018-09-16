@@ -3,6 +3,8 @@
     <div class="card">
       <g-form
         @submit="onSubmit"
+        @remove="deleteItem"
+        :showRemoveBtn="!!$route.params.id"
         :actionTitle="this.$route.params.id ? 'Update' : 'Create'"
         ref="form"
       >
@@ -28,6 +30,20 @@
           type="checkbox"
         ></g-field>
 
+        <g-field
+          :model="form"
+          label="Exclude from articles list"
+          name="excludeFromArticlesList"
+          type="checkbox"
+        ></g-field>
+
+        <g-field
+          :model="form"
+          label="Is draft"
+          name="isDraft"
+          type="checkbox"
+        ></g-field>
+
       </g-form>
     </div>
   </div>
@@ -47,10 +63,26 @@
       form: {
         title: '',
         description: '',
-        onMainPage: false
+        onMainPage: false,
+        excludeFromArticlesList: false,
+        disableHTMLEditor: false,
+        isDraft: false
       }
     }),
     methods: {
+      deleteItem () {
+        let id = this.$route.params.id
+        this.$store.dispatch('deleteModel', {
+          url: blog.articleDelete(id),
+          ids: [id]
+        }).then(r => {
+          this.$router.push({ name: 'user.profile', params: { id: this.$store.getters.userData.id } }, () => {
+            this.$store.commit('snackMessage', 'Removed')
+          })
+        }).catch(e => {
+          this.$store.commit('snackMessage', e)
+        })
+      },
       getEndpoint (route) {
         return blog.article(route)
       },
@@ -64,7 +96,6 @@
             : blog.articleCreate(),
           endpoint: blog.articles(),
           id: this.$route.params.id,
-          modelEndpointFunc: ({ data: { id } }) => blog.article({ params: { id } }),
           data: this.form
         }).then(({ data: { id, slug } }) => {
           this.$router.push({ name: 'blog.article', params: { id, slug } })

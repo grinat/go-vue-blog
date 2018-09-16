@@ -5,9 +5,15 @@
   >
     <slot></slot>
     <slot name="actions">
-      <div class="field">
+      <div class="field is-grouped">
         <div class="control">
           <button type="submit" :disabled="formFreezed" class="button is-link">{{actionTitle}}</button>
+        </div>
+        <div
+          class="control"
+          v-if="showRemoveBtn"
+        >
+          <button @click.stop.prevent="onRemove" :disabled="formFreezed" class="button">Remove</button>
         </div>
       </div>
     </slot>
@@ -21,12 +27,23 @@
       actionTitle: {
         type: String,
         default: 'Submit'
+      },
+      showRemoveBtn: {
+        type: Boolean,
+        default: false
       }
     },
     data: () => ({
       formFreezed: false
     }),
     methods: {
+      onRemove () {
+        if (this.formFreezed) {
+          return
+        }
+        this.freeze()
+        this.$emit('remove')
+      },
       onSubmit () {
         if (this.formFreezed) {
           return

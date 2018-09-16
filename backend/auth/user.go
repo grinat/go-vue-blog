@@ -10,7 +10,6 @@ import (
 	"encoding/hex"
 	"strings"
 	"encoding/json"
-	"html/template"
 )
 
 type User struct {
@@ -103,8 +102,8 @@ func (model *User) BeforeCreate() error {
 	model.updateTime()
 	model.GreatePassword()
 	model.Role = RoleUser
-	model.Name = template.HTMLEscapeString(model.Name)
-	model.Email = template.HTMLEscapeString(model.Email)
+	model.Name = common.PreventInjection(model.Name)
+	model.Email = common.PreventInjection(model.Email)
 	user := User{}
 	err := common.FindBy(&user, bson.M{"role":RoleAdmin})
 	if err != nil {

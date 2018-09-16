@@ -14,8 +14,11 @@ type Article struct {
 	Slug        string `json:"slug" bson:"slug"`
 	Description string `json:"description" bson:"description"`
 	LastUpdated int32 `json:"lastUpdated" bson:"lastUpdated"`
-	OnMainPage  bool `json:"onMainPage" bson:"onMainPage"`
 	CreatedBy   bson.ObjectId `json:"createdBy" bson:"createdBy,omitempty"`
+	OnMainPage  bool `json:"onMainPage" bson:"onMainPage"`
+	ExcludeFromArticlesList  bool `json:"excludeFromArticlesList" bson:"excludeFromArticlesList"`
+	DisableHTMLEditor bool `json:"disableHTMLEditor" bson:"disableHTMLEditor"`
+	IsDraft bool `json:"isDraft" bson:"isDraft"`
 }
 
 type Articles struct {

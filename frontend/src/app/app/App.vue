@@ -20,16 +20,16 @@
     },
     methods: {
       updateUserData () {
-        // TODO
+        if (typeof window !== 'undefined') {
+          this.$store.dispatch('updateUserData')
+        }
       },
       onNeedReLogin (needReLogin) {
         if (needReLogin && needReLogin.value === true) {
           this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
           this.$store.commit('needReLogin', false)
           this.$store.commit('userDelAuthData')
-          this.$router.push({
-            name: 'user.login'
-          })
+          this.$router.push({ name: 'user.login' })
         }
       }
     }

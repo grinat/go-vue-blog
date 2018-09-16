@@ -6,7 +6,8 @@ import (
 	"github.com/globalsign/mgo/bson"
 	"go-vue-blog/backend/common"
 	"go-vue-blog/backend/auth"
-	)
+	"errors"
+)
 
 func ArticleCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	identify := auth.GetIdentify(r)
@@ -58,10 +59,13 @@ func ArticleDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 func ArticleRead(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	identify := auth.GetIdentify(r)
 	model := Article{}
 	err := common.FindById(&model, ps.ByName("id"))
 	if err != nil {
 		common.HandleError(err, w, 404)
+	} else if model.IsDraft == true && model.CreatedBy != identify.Id {
+		common.HandleError(errors.New("You can't view draft"), w, 403)
 	} else {
 		common.Out(model, w, r)
 	}
@@ -72,6 +76,8 @@ func ArticleMain(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := common.FindBy(&model, bson.M{"onMainPage": true})
 	if err != nil {
 		common.HandleError(err, w, 404)
+	} else if model.IsDraft == true {
+		common.HandleError(errors.New("Can't show draft on main page"), w, 422)
 	} else {
 		common.Out(model, w, r)
 	}
@@ -80,7 +86,26 @@ func ArticleMain(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func ArticleList(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	model := Article{}
 	list := Articles{}
-	err := common.FindAllByReq(r, &model, &list.Data, &list.Meta)
+	q := &bson.M{"excludeFromArticlesList": false, "isDraft": false}
+	err := common.FindAllByReq(q, r, &model, &list.Data, &list.Meta)
+	if err != nil {
+		common.HandleError(err, w, 500)
+		return
+	}
+
+	common.Out(list, w, r)
+}
+
+func ArticleFromUserList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	identify := auth.GetIdentify(r)
+	model := Article{}
+	list := Articles{}
+	userId := bson.ObjectIdHex(ps.ByName("userId"))
+	q := &bson.M{"isDraft": false, "createdBy": userId} // &bson.M{"excludeFromArticlesList": false}
+	if identify.Id == userId {
+		q = &bson.M{"createdBy": userId}
+	}
+	err := common.FindAllByReq(q, r, &model, &list.Data, &list.Meta)
 	if err != nil {
 		common.HandleError(err, w, 500)
 		return
