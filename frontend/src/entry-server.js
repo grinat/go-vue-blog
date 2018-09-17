@@ -25,6 +25,7 @@ export default context => {
 
     const { fullPath } = router.resolve(url).route
     if (fullPath !== url) {
+      // eslint-disable-next-line
       return reject({ url: fullPath })
     }
 
@@ -36,6 +37,7 @@ export default context => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
+        // eslint-disable-next-line
         return reject({ code: 404 })
       }
       // Call fetchData hooks on components matched by the route.

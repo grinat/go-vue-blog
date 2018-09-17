@@ -4,7 +4,7 @@ jobs:
   include:
   - stage: Build and Testing
     script:
-    - sh ./scripts/test-and-build-on-travis.sh || travis_terminate 1
+    - travis_wait 20 sh ./scripts/test-and-build-on-travis.sh || travis_terminate 1
     - sh ./scripts/push-from-trevis.sh || travis_terminate 1
   - stage: Deploy
     script:

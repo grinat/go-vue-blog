@@ -36,6 +36,8 @@ describe("User Profile", () => {
   test("User view foreign profile", async () => {
     await page.goto(adminProfileLink)
     await utils.wait(config.navTimeout)
+    // wait for table reload after vue loaded and replace table
+    await utils.wait(5000)
     const textTable = await utils.getText(page, '.b-table')
     expect(textTable).not.toContain("Draft")
     expect(textTable).not.toContain("Edit")
