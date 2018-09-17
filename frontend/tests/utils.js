@@ -1,8 +1,16 @@
 const puppeteer = require('puppeteer')
 const config = require('./config')
 
+const context = {}
+
 const utils = {
-  getBrowser: async function() {
+  putToContext: function (key, value) {
+    context[key] = value
+  },
+  getFromContext: function (key) {
+    return context[key]
+  },
+  getBrowser: async function () {
     const {width, height} = config
     let launchConfig = Object.assign({
       args: [
@@ -42,7 +50,7 @@ const utils = {
   },
   getText: async function (page, selector) {
     if (selector) {
-      return page.evaluate(() => document.querySelector(selector).textContent)
+      return page.evaluate(selector => document.body.querySelector(selector).textContent, selector)
     }
     return page.evaluate(() => document.body.textContent)
   }
