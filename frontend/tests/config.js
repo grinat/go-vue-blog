@@ -6,8 +6,8 @@ const config = {
   // '/usr/bin/chromium-browser',
   executablePath: process.env.TESTING_CHROMIUM_PATH || null,
   url: process.env.TESTING_URL || 'http://localhost:9010',
-  timeout: 40000,
-  navTimeout: 3000,
+  timeout: 50000,
+  navTimeout: 4000,
   admin: {
     email: 'paladin2012gnu@gmail.com',
     name: 'Admin',

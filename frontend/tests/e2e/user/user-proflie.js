@@ -17,12 +17,12 @@ describe("User Profile", () => {
     await utils.login(page, config.admin)
     await page.click(".my-profile-link")
     await utils.wait(config.navTimeout)
+    adminProfileLink = await page.url()
     const text = await utils.getText(page)
     expect(text).toContain(config.admin.name)
     expect(text).toContain(utils.getFromContext('articleTitle'))
     const textTable = await utils.getText(page, '.b-table')
     expect(textTable).toContain("Draft")
-    adminProfileLink = await page.url()
   }, config.timeout)
 
   test("User logout", async () => {
