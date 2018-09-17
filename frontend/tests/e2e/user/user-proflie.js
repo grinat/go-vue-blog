@@ -21,8 +21,7 @@ describe("User Profile", () => {
     const text = await utils.getText(page)
     expect(text).toContain(config.admin.name)
     expect(text).toContain(utils.getFromContext('articleTitle'))
-    const textTable = await utils.getText(page, '.b-table')
-    expect(textTable).toContain("Draft")
+    expect(text).toContain("Draft")
   }, config.timeout)
 
   test("User logout", async () => {
@@ -36,10 +35,8 @@ describe("User Profile", () => {
   test("User view foreign profile", async () => {
     await page.goto(adminProfileLink)
     await utils.wait(config.navTimeout)
-    // wait for table reload after vue loaded and replace table
-    await utils.wait(5000)
-    const textTable = await utils.getText(page, '.b-table')
-    expect(textTable).not.toContain("Draft")
-    expect(textTable).not.toContain("Edit")
+    const text = await utils.getText(page)
+    expect(text).not.toContain("Draft")
+    expect(text).not.toContain("Edit")
   }, config.timeout)
 })
