@@ -1,7 +1,11 @@
 const puppeteer = require('puppeteer')
 const config = require('./config')
+const path = require('path')
+const fs = require('fs')
 
 const context = {}
+const reportsPath = path.join(process.cwd(), 'tests/test-reports/')
+let closeCounter = 0
 
 const utils = {
   putToContext: function (key, value) {
@@ -9,6 +13,21 @@ const utils = {
   },
   getFromContext: function (key) {
     return context[key]
+  },
+  closeBrowser: async function (page, browser) {
+    closeCounter++
+    let id = `${closeCounter}`
+    if (config.takeScreenshots) {
+      await page.screenshot({path: path.join(reportsPath, `${id}.png`)})
+    }
+    if (config.saveHTML) {
+      const bodyHTML = await page.content()
+      fs.writeFileSync(path.join(reportsPath, `${id}.html`), bodyHTML)
+    }
+    await browser.close()
+  },
+  getLocation: async function (page) {
+    return page.evaluate(() => document.location.href)
   },
   getBrowser: async function () {
     const {width, height} = config

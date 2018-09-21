@@ -58,7 +58,7 @@ export default context => {
         context.state = store.state
         resolve(app)
       }).catch(() => {
-        console.error('asyncData error')
+        console.error('asyncData error', store.getters.getError)
         context.state = store.state
         resolve(app)
       })

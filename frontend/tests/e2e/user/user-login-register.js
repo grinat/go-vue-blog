@@ -10,7 +10,7 @@ describe("User register/login", () => {
   })
 
   afterEach(async () => {
-    await browser.close()
+    await utils.closeBrowser(page, browser)
   })
 
   test("Register admin", async () => {

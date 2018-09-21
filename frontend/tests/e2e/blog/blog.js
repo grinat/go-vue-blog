@@ -14,7 +14,7 @@ describe("Blog", () => {
   })
 
   afterEach(async () => {
-    await browser.close()
+    await utils.closeBrowser(page, browser)
   })
 
   test("Create article", async () => {

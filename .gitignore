@@ -5,6 +5,8 @@ tmp/
 **/logs/nginx
 uploads/*
 !uploads/.gitkeep
+**/test-reports/*
+!**/test-reports/.gitkeep
 
 # Editor directories and files
 .idea

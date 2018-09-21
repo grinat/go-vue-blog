@@ -10,14 +10,14 @@ describe("User Profile", () => {
   })
 
   afterEach(async () => {
-    await browser.close()
+    await utils.closeBrowser(page, browser)
   })
 
   test("Admin user open profile", async () => {
     await utils.login(page, config.admin)
     await page.click(".my-profile-link")
     await utils.wait(config.navTimeout)
-    adminProfileLink = await page.url()
+    adminProfileLink = await utils.getLocation(page)
     const text = await utils.getText(page)
     expect(text).toContain(config.admin.name)
     expect(text).toContain(utils.getFromContext('articleTitle'))
@@ -36,6 +36,7 @@ describe("User Profile", () => {
     await page.goto(adminProfileLink)
     await utils.wait(config.navTimeout)
     const text = await utils.getText(page)
+    expect(text).toContain(config.admin.name)
     expect(text).not.toContain("Draft")
     expect(text).not.toContain("Edit")
   }, config.timeout)
@@ -50,11 +51,10 @@ describe("User Profile", () => {
 
   test("Can edit profile", async () => {
     await utils.login(page, config.admin)
-    // go to prifle
+    // go to profile
     await page.goto(adminProfileLink)
     await utils.wait(config.navTimeout)
     // go to prifle edit
-    await page.waitForSelector('.profile-edit-btn')
     await page.click(".profile-edit-btn")
     await utils.wait(config.navTimeout)
     // upd name

@@ -8,6 +8,8 @@ const config = {
   url: process.env.TESTING_URL || 'http://localhost:9010',
   timeout: 40000,
   navTimeout: 3000,
+  takeScreenshots: true,
+  saveHTML: true,
   admin: {
     email: 'paladin2012gnu@gmail.com',
     name: 'Admin',

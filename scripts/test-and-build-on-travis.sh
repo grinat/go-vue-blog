@@ -1,6 +1,7 @@
 #!/usr/bin/sh
 
 chmod 0777 frontend
+chmod 0777 frontend/tests/test-reports
 
 cd docker/prod
 

@@ -142,6 +142,8 @@ export default {
         // req params
         if (error.response.request && error.response.request.responseURL) {
           formatError.apiUrl = error.response.request.responseURL
+        } else if (error.config) {
+          formatError.apiUrl = error.config.url
         }
       } else if (error && error.message) {
         formatError.message = error.message
