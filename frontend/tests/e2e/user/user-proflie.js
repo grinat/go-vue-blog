@@ -54,6 +54,7 @@ describe("User Profile", () => {
     await page.goto(adminProfileLink)
     await utils.wait(config.navTimeout)
     // go to prifle edit
+    await page.waitForSelector('.profile-edit-btn')
     await page.click(".profile-edit-btn")
     await utils.wait(config.navTimeout)
     // upd name
