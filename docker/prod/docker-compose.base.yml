@@ -24,7 +24,7 @@ services:
 
   go-vue-blog.db.mongo:
     restart: always
-    image: mongo:4.1
+    image: mongo:4.0.2
     networks: [go-vue-blog]
     container_name: go-vue-blog-db-mongo
     environment:
