@@ -4,7 +4,8 @@ import { buildURLQueryFromRoute } from '../utils/url'
 export const user = {
   login: () => `${ROOT_API}/user/login`,
   register: () => `${ROOT_API}/user/register`,
-  profile: (id) => `${ROOT_API}/user/profile/${id}`
+  profile: (id) => `${ROOT_API}/user/profile/${id}`,
+  profileUpdate: (id) => `${ROOT_API}/user/profile/${id}`
 }
 
 export const blog = {
@@ -15,4 +16,8 @@ export const blog = {
   articleUpdate: (id) => `${ROOT_API}/blog/article/${id}`,
   articleDelete: (id) => `${ROOT_API}/blog/article/${id}`,
   article: ({ params: { id } }) => `${ROOT_API}/blog/article/${id}`
+}
+
+export const upload = {
+  image: () => `${ROOT_API}/upload/image`
 }

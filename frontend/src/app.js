@@ -8,7 +8,9 @@ import VeeValidate from 'vee-validate'
 import CommonComponents from './common/components.js'
 import Components from './components/components'
 import headerMixin from './mixins/header-mixin.js'
+import {fromNow} from "./filters/time"
 
+Vue.filter('fromNow', fromNow)
 Vue.use(Buefy)
 Vue.use(VeeValidate)
 Vue.use(CommonComponents)

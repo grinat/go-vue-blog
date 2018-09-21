@@ -59,7 +59,7 @@
       },
       handleServerError (e) {
         this.unfreeze()
-        this.$store.commit('snackMessage', e)
+        this.$store.commit('snackMessage', { message: e })
       },
       freeze () {
         this.formFreezed = true

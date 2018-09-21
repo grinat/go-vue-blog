@@ -42,7 +42,7 @@ services:
     - ../../uploads:/go/src/go-vue-blog/uploads
     environment:
     - MONGO_URI=mongodb://bloger:Ismwo2137&2wnso@go-vue-blog.db.mongo:27017
-    - UPLOADS_DOMAIN=
+    - UPLOADS_DOMAIN=relative
     - MONGO_DB=go-vue-blog
 
   go-vue-blog.node:

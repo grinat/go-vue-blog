@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="user login">
     <div class="card">
       <g-form
         @submit="onSubmit"

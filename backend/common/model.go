@@ -17,6 +17,7 @@ type Model interface {
 	BeforeUpdate() error
 }
 
+// meta, used in reponses
 type ModelMeta struct {
 	TotalCount int `json:"totalCount"`
 	PerPage int `json:"perPage"`
@@ -24,6 +25,11 @@ type ModelMeta struct {
 	PageCount int `json:"pageCount"`
 }
 
+const (
+	PerPage = 15
+)
+
+// decoded json, validate and save new model in db
 func CreateByReq(r *http.Request, model Model)  (code int, err error) {
 	code = 500
 	decoder := json.NewDecoder(r.Body)
@@ -46,6 +52,7 @@ func CreateByReq(r *http.Request, model Model)  (code int, err error) {
 	return code, nil
 }
 
+// save new model in db
 func CreateModel(model Model) error {
 	err := model.BeforeCreate()
 	if err != nil {
@@ -58,11 +65,13 @@ func CreateModel(model Model) error {
 	return err
 }
 
+// find one model by id (id converted to hex id)
 func FindById(model Model, id string) error {
 	q := bson.M{"_id": bson.ObjectIdHex(id)}
 	return FindBy(model, q)
 }
 
+// find one model by bson.M params
 func FindBy(model Model, q bson.M) error {
 	db := model.GetDB()
 	err := db.C(model.GetCollection()).Find(q).One(model)
@@ -73,6 +82,7 @@ func FindBy(model Model, q bson.M) error {
 	return nil
 }
 
+// finde model by id, if exist decode json, validate and update in db
 func UpdateByReq(r *http.Request, model Model, id string) (code int, err error) {
 	code = 500
 	db := model.GetDB()
@@ -108,6 +118,7 @@ func UpdateByReq(r *http.Request, model Model, id string) (code int, err error) 
 	return code, nil
 }
 
+// find model in db, if exist - remove
 func RemoveByReq(model Model, id string) (code int, err error) {
 	code = 500
 	db := model.GetDB()
@@ -126,6 +137,7 @@ func RemoveByReq(model Model, id string) (code int, err error) {
 	return code, nil
 }
 
+// only remove model, no exist check
 func RemoveById(model Model, id string) error  {
 	db := model.GetDB()
 	q := bson.M{"_id": bson.ObjectIdHex(id)}
@@ -137,9 +149,14 @@ func RemoveById(model Model, id string) error  {
 	return nil
 }
 
+// find model by bson.M params
+// supported query params:
+// sort=-fieldName ascend sorting
+// sort=fieldName descendin sorting
+// per-page=<number> models on page
 func FindAllByReq(q *bson.M, r *http.Request, model Model, models interface{}, meta *ModelMeta) error {
 	db := model.GetDB()
-	perPage := 10
+	perPage := PerPage
 	sort := "-_id"
 	page := 1
 	for k, v := range r.URL.Query(){

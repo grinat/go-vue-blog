@@ -11,7 +11,7 @@ const findDefaultHandler = (v, id) => {
 }
 
 export default {
-  snackMessage: (state, message, type = 'danger', duration = 5000) => {
+  snackMessage: (state, {message, type = 'danger', duration = 5000}) => {
     state.snackMessage = Object.assign({}, { createdAt: +new Date(), message, type, duration })
   },
   userSetAuthData: (state, data) => {
@@ -42,10 +42,10 @@ export default {
     if (state.endpoints[endpoint] && state.endpoints[endpoint].data && Array.isArray(state.endpoints[endpoint].data)) {
       const origin = state.endpoints[endpoint].data.slice()
       const findHandler = findFunc || findDefaultHandler
-      origin.forEach((v, i) => {
+      origin.forEach((v, originIndex) => {
         ids.forEach(id => {
           if (findHandler(v, id) === true) {
-            state.endpoints[endpoint].data.splice(i, 1)
+            state.endpoints[endpoint].data.splice(originIndex, 1)
           }
         })
       })

@@ -5,6 +5,7 @@ export function prepareInitialState (state) {
   // get data from local storage
   const userData = localStorage.getItem(USER_DATA) ? JSON.parse(localStorage.getItem(USER_DATA)) : null
   // if exist data in cookies and in storage
+  // eslint-disable-next-line
   if (userData && state._userData && userData.id && state._userData.id && userData.id == state._userData.id) {
     state._userData = Object.assign({}, state._userData, userData)
   }

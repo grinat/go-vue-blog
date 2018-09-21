@@ -1,0 +1,18 @@
+.g-html-editor{
+  .ql-container{
+    max-height: 125px;
+    overflow: scroll;
+  }
+  .switcher{
+    position: absolute;
+    top: -32px;
+    right: 0;
+
+    .control-label{
+      position: absolute;
+      right: -7px;
+      width: 210px;
+      overflow: hidden;
+    }
+  }
+}

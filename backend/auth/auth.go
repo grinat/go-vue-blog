@@ -12,6 +12,8 @@ func SetDB(con *mgo.Database)  {
 	db = con
 }
 
+// get identify by header
+// Authorization: Bearer  <token>
 func GetIdentify(r *http.Request) User {
 	// id := r.Context().Value("ID").(string)
 	token := GetToken(r)
@@ -23,6 +25,7 @@ func GetIdentify(r *http.Request) User {
 	return model
 }
 
+// find author header in req and return value
 func GetToken(r *http.Request) string {
 	token := ""
 	tokenHeader := r.Header.Get("Authorization")

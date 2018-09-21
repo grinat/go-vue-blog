@@ -34,7 +34,9 @@ export function routerHandlers (c, { store, from, to }) {
 }
 
 export function handleBeforeEach (to, from, next, store) {
-  if (to.meta && to.meta.needRoles) {
+  if (to.meta && to.meta.accessHandler) {
+    to.meta.accessHandler({ store, from, to, next })
+  } else if (to.meta && to.meta.needRoles) {
     if (to.meta.needRoles.indexOf(store.getters.userRole) > -1) {
       next()
     } else {
@@ -43,5 +45,14 @@ export function handleBeforeEach (to, from, next, store) {
     }
   } else {
     next()
+  }
+}
+
+export function handleOwnerAccess ({ store, from, to, next }) {
+  if (store.getters.isGuest === false && (store.getters.userRole === 'admin' || store.getters.userData.id === to.params.id)) {
+    next()
+  } else {
+    next({ name: 'blog.home' })
+    store.commit('snackMessage', { message: 'Access denied' })
   }
 }

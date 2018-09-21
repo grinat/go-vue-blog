@@ -1,20 +1,28 @@
 <template>
   <div class="g-html-editor">
+    <div
+      v-if="showToggleHTMLEditorBtn"
+      class="switcher"
+    >
+      <b-switch
+        v-model="model.disableHTMLEditor"
+      >
+        Disable WYSIWYG
+      </b-switch>
+    </div>
     <textarea
       v-if="showToggleHTMLEditorBtn && model.disableHTMLEditor"
       class="textarea"
+      v-model="model[name]"
     ></textarea>
     <vue-editor
       v-else
+      :useCustomImageHandler="true"
       :editorToolbar="toolbar"
       :id="editorId"
+      @imageAdded="onImageAdded"
       v-model="model[name]"
     ></vue-editor>
-    <a
-      v-if="showToggleHTMLEditorBtn"
-      class="button"
-      @click.stop.prevent="toggleHTMLEditor()"
-    >Disable/Enable HTML Editor</a>
   </div>
 </template>
 
@@ -86,8 +94,16 @@
       }
     },
     methods: {
-      toggleHTMLEditor () {
-        this.$set(this.model, 'disableHTMLEditor', !this.model.disableHTMLEditor)
+      onImageAdded (file, Editor, cursorLocation, resetUploader) {
+        this.$store.dispatch('uploadFile', {
+          file
+        }).then(({ data: { url } }) => {
+          Editor.insertEmbed(cursorLocation, 'image', url)
+          resetUploader()
+        }).catch(e => {
+          this.$store.commit('snackMessage', { message: e })
+          resetUploader()
+        })
       }
     }
   }

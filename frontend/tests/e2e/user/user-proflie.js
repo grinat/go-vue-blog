@@ -39,4 +39,30 @@ describe("User Profile", () => {
     expect(text).not.toContain("Draft")
     expect(text).not.toContain("Edit")
   }, config.timeout)
+
+  test("User cant edit foreign profile", async () => {
+    // go to prifle
+    await page.goto(adminProfileLink)
+    await utils.wait(config.navTimeout)
+    const text = await utils.getText(page)
+    expect(text).not.toContain('Edit')
+  })
+
+  test("Can edit profile", async () => {
+    await utils.login(page, config.admin)
+    // go to prifle
+    await page.goto(adminProfileLink)
+    await utils.wait(config.navTimeout)
+    // go to prifle edit
+    await page.click(".profile-edit-btn")
+    await utils.wait(config.navTimeout)
+    // upd name
+    let newName = config.admin.name + 'Upd'
+    await page.type("input[name=name]", 'Upd')
+    await page.click("button[type=submit]")
+    await utils.wait(config.navTimeout)
+    // chek for new name in profile
+    const text = await utils.getText(page)
+    expect(text).toContain(newName)
+  }, config.timeout)
 })

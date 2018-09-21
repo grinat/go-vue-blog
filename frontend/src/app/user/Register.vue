@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="user register">
     <div class="card">
       <g-form
         class="card-content"

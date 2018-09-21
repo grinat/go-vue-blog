@@ -53,6 +53,12 @@ const utils = {
       return page.evaluate(selector => document.body.querySelector(selector).textContent, selector)
     }
     return page.evaluate(() => document.body.textContent)
+  },
+  getHTML: async function (page, selector) {
+    if (selector) {
+      return page.evaluate(selector => document.body.querySelector(selector).innerHTML, selector)
+    }
+    return page.evaluate(() => document.body.innerHTML)
   }
 }
 

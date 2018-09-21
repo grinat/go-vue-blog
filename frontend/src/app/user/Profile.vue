@@ -1,13 +1,13 @@
 <template>
-  <div class="home">
+  <div class="user profile">
     <div class="card">
       <div
         class="card-content"
       >
         <div class="media">
           <div class="media-left">
-            <figure class="image is-96x96">
-              <img src="https://bulma.io/images/placeholders/96x96.png" :alt="item.name">
+            <figure class="avatar image is-96x96">
+              <img :src="item.avatar" :alt="item.name">
             </figure>
           </div>
           <div class="media-content">
@@ -16,10 +16,19 @@
             <p class="is-6">{{item.role}}</p>
           </div>
         </div>
+        <router-link
+          v-if="userCanEdit"
+          tag="button"
+          class="button is-link profile-edit-btn"
+          :to="{ name: 'user.profile.update', params: { id: item.id } }"
+        >
+          Edit
+        </router-link>
       </div>
     </div>
 
     <b-table
+      v-if="hasArticlesFromUserData"
       class="card"
       :data="articlesFromUserData"
       :default-sort-direction="articlesFromUserTable.defaultSortOrder"
@@ -28,35 +37,62 @@
       backend-sorting
     >
       <template slot-scope="props">
-        <b-table-column field="title" label="Title" sortable>
+        <b-table-column
+          field="title"
+          label="Title"
+          sortable
+        >
           {{props.row.title}}
         </b-table-column>
-        <b-table-column field="lastUpdated" label="Last Updated" sortable>
-          {{props.row.lastUpdated}}
+        <b-table-column
+          field="lastUpdated"
+          label="Last Updated"
+          sortable
+        >
+          {{props.row.lastUpdated | fromNow}}
         </b-table-column>
         <template v-if="userCanEdit">
-          <b-table-column field="isDraft" label="Draft" sortable>
+          <b-table-column
+            field="isDraft"
+            label="Draft"
+            sortable
+          >
             {{props.row.isDraft ? 'yes' : 'no'}}
           </b-table-column>
-          <b-table-column field="onMainPage" label="On main page" sortable>
+          <b-table-column
+            field="onMainPage"
+            label="On main page"
+            sortable
+          >
             {{props.row.onMainPage ? 'yes' : 'no'}}
           </b-table-column>
-          <b-table-column field="excludeFromArticlesList"  label="Excluded" sortable>
+          <b-table-column
+            field="excludeFromArticlesList"
+            label="Excluded"
+            sortable
+          >
             {{props.row.excludeFromArticlesList ? 'yes' : 'no'}}
           </b-table-column>
         </template>
-        <b-table-column field="actions" label="Actions">
-          <router-link
-            :to="{name: 'blog.article', params: {id: props.row.id, slug: props.row.slug}}"
-          >
-            Open
-          </router-link>
-          <router-link
-            v-if="userCanEdit"
-            :to="{name: 'blog.article.update', params: {id: props.row.id}}"
-          >
-            Edit
-          </router-link>
+        <b-table-column
+          field="actions"
+          label="Actions"
+        >
+          <div class="buttons">
+            <router-link
+              class="button is-outlined"
+              :to="{name: 'blog.article', params: {id: props.row.id, slug: props.row.slug}}"
+            >
+              Open
+            </router-link>
+            <router-link
+              v-if="userCanEdit"
+              class="button is-link"
+              :to="{name: 'blog.article.update', params: {id: props.row.id}}"
+            >
+              Edit
+            </router-link>
+          </div>
         </b-table-column>
       </template>
     </b-table>
@@ -79,8 +115,8 @@
     data: () => ({
       articlesFromUserTable: {
         sortField: 'id',
-        sortOrder: 'desc',
-        defaultSortOrder: 'desc'
+        sortOrder: 'asc',
+        defaultSortOrder: 'asc'
       }
     }),
     computed: {
@@ -99,6 +135,9 @@
       },
       articlesFromUserData () {
         return this.articlesFromUser.data || []
+      },
+      hasArticlesFromUserData () {
+        return this.articlesFromUserData.length > 0
       }
     },
     created () {

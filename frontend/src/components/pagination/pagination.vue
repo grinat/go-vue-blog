@@ -3,6 +3,7 @@
     class="pagination g-pagination is-centered"
     role="navigation"
     aria-label="pagination"
+    v-if="hidePaginate===false"
   >
     <div class="columns">
       <div class="column">
@@ -51,6 +52,10 @@
       maxLinksCount: {
         type: Number,
         default: 7
+      },
+      hideOnOnePage: {
+        type: Boolean,
+        default: true
       }
     },
     data: () => ({
@@ -62,6 +67,9 @@
       }
     },
     computed: {
+      hidePaginate () {
+        return this.hideOnOnePage === true && this.pageCount <= 1
+      },
       nextPage () {
         let page = 0
         if (this.meta) {

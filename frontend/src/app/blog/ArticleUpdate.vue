@@ -1,5 +1,5 @@
 <template>
-  <div class="article-update">
+  <div class="blog article-update">
     <div class="card">
       <g-form
         @submit="onSubmit"
@@ -77,10 +77,10 @@
           ids: [id]
         }).then(r => {
           this.$router.push({ name: 'user.profile', params: { id: this.$store.getters.userData.id } }, () => {
-            this.$store.commit('snackMessage', 'Removed')
+            this.$store.commit('snackMessage', { message: 'Removed', type: 'success' })
           })
         }).catch(e => {
-          this.$store.commit('snackMessage', e)
+          this.$store.commit('snackMessage', { message: e })
         })
       },
       getEndpoint (route) {

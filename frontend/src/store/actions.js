@@ -1,9 +1,25 @@
 import api from '../api'
-import { user } from '../api/endpoints'
+import { user, upload } from '../api/endpoints'
 import uuid from '../utils/uuid'
 import { CACHE_TIME } from '../configs/config'
 
 export default {
+  uploadFile: (context, {file, type = 'image'}) => {
+    let url = null
+    const formData = new FormData()
+    switch (type) {
+      default:
+      case 'image':
+        url = upload.image()
+        formData.append('image', file)
+        break
+    }
+    return api.save(
+      context.getters.authToken, url, formData, {}, context
+    ).catch(e => {
+      return Promise.reject(e.response)
+    })
+  },
   updateUserData: (context) => {
     if (context.getters.isGuest === true) {
       return Promise.resolve(null)
@@ -77,7 +93,7 @@ export default {
       }
       const offlineResponse = { data }
       if (endpoint) {
-        context.commit('updateEndpoint', { response: offlineResponse, id, endpoint, action: 'replaceSame' })
+        context.commit('updateEndpoint', { response: offlineResponse, id, endpoint, action })
       }
       return Promise.resolve(offlineResponse)
     }
@@ -86,7 +102,7 @@ export default {
       context.getters.authToken, url, data, params, context
     ).then((response) => {
       if (endpoint) {
-        context.commit('updateEndpoint', { response, id, endpoint, action: 'replaceSame' })
+        context.commit('updateEndpoint', { response, id, endpoint, action })
       }
       return response
     }).catch(e => {

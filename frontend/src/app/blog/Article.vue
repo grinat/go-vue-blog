@@ -1,5 +1,5 @@
 <template>
-  <div class="article">
+  <div class="blog article">
     <div class="card">
       <div class="card-content">
         <h1 class="title">{{item.title}}</h1>
@@ -8,7 +8,7 @@
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              <img :src="item.createdUser.avatar" :alt="item.createdUser.name">
             </figure>
           </div>
           <div class="media-content">
@@ -16,10 +16,10 @@
               <router-link
                 :to="{name: 'user.profile', params: { id: item.createdBy }}"
               >
-                {{item.createdBy}}
+                {{item.createdUser.name}}
               </router-link>
             </p>
-            <p class="subtitle is-6">{{item.lastUpdated}}</p>
+            <p class="subtitle is-6">{{item.lastUpdated | fromNow}}</p>
           </div>
         </div>
       </div>

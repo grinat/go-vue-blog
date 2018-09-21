@@ -26,7 +26,6 @@ func ArticleCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	}
 }
 
-
 func ArticleUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	identify := auth.GetIdentify(r)
 	if identify.IsAdmin() == false {
@@ -62,6 +61,9 @@ func ArticleRead(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	identify := auth.GetIdentify(r)
 	model := Article{}
 	err := common.FindById(&model, ps.ByName("id"))
+	if err == nil {
+		err = model.FillCreatedUser()
+	}
 	if err != nil {
 		common.HandleError(err, w, 404)
 	} else if model.IsDraft == true && model.CreatedBy != identify.Id {
@@ -79,6 +81,7 @@ func ArticleMain(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	} else if model.IsDraft == true {
 		common.HandleError(errors.New("Can't show draft on main page"), w, 422)
 	} else {
+		model.FillCreatedUser()
 		common.Out(model, w, r)
 	}
 }
@@ -88,6 +91,9 @@ func ArticleList(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	list := Articles{}
 	q := &bson.M{"excludeFromArticlesList": false, "isDraft": false}
 	err := common.FindAllByReq(q, r, &model, &list.Data, &list.Meta)
+	if err == nil {
+		err = model.FillCreatedUsers(list.Data)
+	}
 	if err != nil {
 		common.HandleError(err, w, 500)
 		return
@@ -101,11 +107,14 @@ func ArticleFromUserList(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	model := Article{}
 	list := Articles{}
 	userId := bson.ObjectIdHex(ps.ByName("userId"))
-	q := &bson.M{"isDraft": false, "createdBy": userId} // &bson.M{"excludeFromArticlesList": false}
+	q := &bson.M{"isDraft": false, "createdBy": userId}
 	if identify.Id == userId {
 		q = &bson.M{"createdBy": userId}
 	}
 	err := common.FindAllByReq(q, r, &model, &list.Data, &list.Meta)
+	if err == nil {
+		model.FillCreatedUsers(list.Data)
+	}
 	if err != nil {
 		common.HandleError(err, w, 500)
 		return

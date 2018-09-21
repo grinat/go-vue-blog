@@ -12,4 +12,5 @@ func RegisterPackage(prefix string, r *httprouter.Router, con *mgo.Database)  {
 	r.POST(prefix + "/user/login", UserLogin)
 	r.POST(prefix + "/user/register", UserRegister)
 	r.GET(prefix + "/user/profile/:id", UserProfile)
+	r.PATCH(prefix + "/user/profile/:id", UserUpdate)
 }

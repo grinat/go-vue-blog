@@ -1,0 +1,31 @@
+.user{
+  &.profile{
+    .profile-edit-btn{
+      position: absolute;
+      top: 24px;
+      right: 24px;
+    }
+
+    @media (max-width: 1087px) {
+      .profile-edit-btn{
+        right: 10px;
+      }
+    }
+  }
+
+  &.profile-update{
+    .avatar-col{
+      max-width: 150px;
+      overflow: hidden;
+    }
+    .button.is-link{
+      margin-left: 150px;
+    }
+
+    @media (max-width: 768px) {
+      .button.is-link{
+        margin-left: inherit;
+      }
+    }
+  }
+}

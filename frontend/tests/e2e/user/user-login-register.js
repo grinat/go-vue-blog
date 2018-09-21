@@ -15,7 +15,7 @@ describe("User register/login", () => {
 
   test("Register admin", async () => {
     await page.goto(config.url + '/user/register')
-    await utils.wait()
+    await utils.wait(config.navTimeout)
     await page.type("input[name=email]", config.admin.email)
     await page.type("input[name=name]", config.admin.name)
     await page.type("input[name=pass]", config.admin.pass)
@@ -30,5 +30,8 @@ describe("User register/login", () => {
 
   test("Login admin", async () => {
     await utils.login(page, config.admin)
+    await utils.wait(config.navTimeout)
+    const text = await utils.getText(page, '.navbar-menu')
+    expect(text).toContain('Logout')
   }, config.timeout)
 })

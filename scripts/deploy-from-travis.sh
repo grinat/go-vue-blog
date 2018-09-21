@@ -18,7 +18,7 @@ ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR 
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR && git checkout $CI_COMMIT_REF_NAME && git pull && git branch"
 
 # Stop docker
-ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.hub.yml down"
+ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "cd $PROJECT_DIR/docker/prod && docker-compose -f docker-compose.base.yml -f docker-compose.hub.yml down || echo 'no started containers'"
 
 # Create backup of volumes
 ssh -o StrictHostKeyChecking=no -i ssh_key.txt $USER_HOST_PORT "docker run --rm -v go-vue-blog-mongo-data:/data -v /var/backups/go-vue-blog:/backup ubuntu tar cvf /backup/go-vue-blog-mongo-data_$BUILD_VERSION.tar /data"

@@ -1,6 +1,6 @@
 import { getRouteCopy } from "./url"
 
-export function handleRenderError ({ err, vm, info, store }) {
+export function handleRenderError ({ err = 'Unknown error', vm, info, store }) {
   console.error(err)
   store.commit('mutateError', {
     response: {
@@ -15,14 +15,14 @@ export function handleAccessError ({ store, from, to, next }) {
   if (store.getters.isGuest) {
     store.commit('userSetRedirectUrl', getRouteCopy(to))
     next({ name: 'user.login' })
-    store.commit('snackMessage', 'Need login')
+    store.commit('snackMessage', { message: 'Need login' })
   } else {
     next({ name: 'blog.home' })
-    store.commit('snackMessage', 'You are already authorized')
+    store.commit('snackMessage', { message: 'You are already authorized' })
   }
 }
 
-export function handleRouteError ({ store, router, err }) {
+export function handleRouteError ({ store, router, err = 'Unknown error' }) {
   console.error(err)
   let msg = 'Navigation error '
   let from = ''

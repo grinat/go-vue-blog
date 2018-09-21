@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"go-vue-blog/backend/upload"
 )
 
 var dbConnectionRepeats = 0
@@ -32,13 +33,22 @@ func Run() {
 		}
 	}
 
+	// create route
 	router := httprouter.New()
 	prefix := "/api"
+	// set panic handler
+	router.PanicHandler = func(w http.ResponseWriter, _ *http.Request, p interface{}) {
+		log.Panic(p)
+		common.HandleError(nil, w, 500)
+	}
 
+	// register avalaible modules
 	auth.SetDB(con)
 	blog.RegisterPackage(prefix, router, con)
 	user.RegisterPackage(prefix, router, con)
+	upload.RegisterPackage(prefix, router, con)
 
+	// set cors options
 	router.OPTIONS(prefix+"/:module/:action", common.CORSHandler)
 	router.OPTIONS(prefix+"/:module/:action/:id", common.CORSHandler)
 	

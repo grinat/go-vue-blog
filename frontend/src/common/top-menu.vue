@@ -1,12 +1,12 @@
 <template>
-  <nav class="navbar is-white">
+  <nav class="top-menu navbar is-white">
     <div
       class="container"
-      @click="menuActive = !menuActive"
+      @click="menuActive = false"
     >
       <div class="navbar-brand">
         <router-link
-          :to="{path: '/'}"
+          :to="{name: 'blog.home'}"
           class="navbar-item brand-text"
         >
           My brand
@@ -15,6 +15,7 @@
           class="navbar-burger burger"
           :class="{'is-active': menuActive}"
           data-target="navMenu"
+          @click.stop.prevent="menuActive = !menuActive"
         >
           <span></span>
           <span></span>

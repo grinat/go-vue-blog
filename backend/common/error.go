@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// rest api errors handler
 func HandleError(err error, w http.ResponseWriter, code int)  {
 	if err == nil {
 		err = errors.New("Error: " + strconv.Itoa(code))

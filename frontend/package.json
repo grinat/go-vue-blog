@@ -10,7 +10,7 @@
     "build:server": "cross-env WEBPACK_TARGET=node vue-cli-service build",
     "start": "cross-env NODE_ENV=production node scripts/start",
     "lint": "vue-cli-service lint",
-    "test": "jest --detectOpenHandles --bail"
+    "test": "jest --bail"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -24,6 +24,8 @@
     "js-cookie": "^2.2.0",
     "lodash.merge": "^4.6.1",
     "lru-cache": "^4.1.1",
+    "moment": "^2.22.2",
+    "regenerator-runtime": "^0.12.1",
     "route-cache": "0.4.3",
     "serve": "^9.6.0",
     "serve-favicon": "^2.4.5",

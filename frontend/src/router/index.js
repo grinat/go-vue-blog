@@ -13,6 +13,9 @@ import BlogArticleUpdate from '../app/blog/ArticleUpdate'
 import UserLogin from '../app/user/Login'
 import UserRegister from '../app/user/Register'
 import UserProfile from '../app/user/Profile'
+import UserProfileUpdate from '../app/user/ProfileUpdate'
+
+import {handleOwnerAccess} from "../utils/routerHandlers"
 
 Vue.use(Router)
 
@@ -48,7 +51,8 @@ export function createRouter () {
         children: [
           { path: 'login', name: 'user.login', component: UserLogin, meta: { needRoles: ['guest'] } },
           { path: 'register', name: 'user.register', component: UserRegister, meta: { needRoles: ['guest'] } },
-          { path: 'profile/:id', name: 'user.profile', component: UserProfile }
+          { path: 'profile/:id', name: 'user.profile', component: UserProfile },
+          { path: 'profile-update/:id', name: 'user.profile.update', component: UserProfileUpdate, meta: {accessHandler: handleOwnerAccess} }
         ]
       },
       {

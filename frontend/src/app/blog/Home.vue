@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="blog home">
     <div class="card">
       <div
         class="card-content"

@@ -6,19 +6,21 @@ import (
 	"github.com/globalsign/mgo"
 	"errors"
 	"go-vue-blog/backend/common"
-	)
+	"go-vue-blog/backend/auth"
+)
 
 type Article struct {
-	Id          bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Title       string `json:"title" bson:"title"`
-	Slug        string `json:"slug" bson:"slug"`
-	Description string `json:"description" bson:"description"`
-	LastUpdated int32 `json:"lastUpdated" bson:"lastUpdated"`
-	CreatedBy   bson.ObjectId `json:"createdBy" bson:"createdBy,omitempty"`
-	OnMainPage  bool `json:"onMainPage" bson:"onMainPage"`
-	ExcludeFromArticlesList  bool `json:"excludeFromArticlesList" bson:"excludeFromArticlesList"`
-	DisableHTMLEditor bool `json:"disableHTMLEditor" bson:"disableHTMLEditor"`
-	IsDraft bool `json:"isDraft" bson:"isDraft"`
+	Id                      bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Title                   string        `json:"title" bson:"title"`
+	Slug                    string        `json:"slug" bson:"slug"`
+	Description             string        `json:"description" bson:"description"`
+	LastUpdated             int32         `json:"lastUpdated" bson:"lastUpdated"`
+	CreatedBy               bson.ObjectId `json:"createdBy" bson:"createdBy,omitempty"`
+	OnMainPage              bool          `json:"onMainPage" bson:"onMainPage"`
+	ExcludeFromArticlesList bool          `json:"excludeFromArticlesList" bson:"excludeFromArticlesList"`
+	DisableHTMLEditor       bool          `json:"disableHTMLEditor" bson:"disableHTMLEditor"`
+	IsDraft                 bool          `json:"isDraft" bson:"isDraft"`
+	CreatedUser             auth.User     `json:"createdUser,omitempty" bson:"-"`
 }
 
 type Articles struct {
@@ -70,4 +72,39 @@ func (model *Article) BeforeUpdate() error  {
 	model.updateTime()
 	model.Slug = model.Title
 	return nil
+}
+
+func (model *Article) FillCreatedUser() error {
+	relation := auth.User{}
+	inQ := &bson.M{"_id": model.CreatedBy}
+
+	db := relation.GetDB()
+	err := db.C(relation.GetCollection()).Find(inQ).One(&relation)
+
+	model.CreatedUser = relation
+	return err
+}
+
+func (model *Article) FillCreatedUsers(list []Article) error {
+	relation := auth.User{}
+	relations := []auth.User{}
+	ids := []bson.ObjectId{}
+	for i := 0; i < len(list);i++ {
+		ids = append(ids, list[i].CreatedBy)
+	}
+	inQ := &bson.M{"_id": bson.M{"$in": ids}}
+
+	db := relation.GetDB()
+	err := db.C(relation.GetCollection()).Find(inQ).All(&relations)
+
+	for i := 0; i < len(list);i++ {
+		for rIdx := 0; rIdx < len(relations);rIdx++ {
+			if relations[rIdx].Id == list[i].CreatedBy {
+				list[i].CreatedUser = relations[rIdx]
+				break
+			}
+		}
+	}
+
+	return  err
 }

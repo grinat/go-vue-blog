@@ -1,0 +1,9 @@
+.blog{
+  &.article-update{
+    .g-html-editor{
+      .ql-container{
+        max-height: calc(100vh - 550px);
+      }
+    }
+  }
+}

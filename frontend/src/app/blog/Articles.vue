@@ -1,5 +1,5 @@
 <template>
-  <div class="articles">
+  <div class="blog articles">
     <template
       v-if="items && items.data && items.data.length"
     >

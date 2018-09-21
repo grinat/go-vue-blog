@@ -95,10 +95,6 @@ export default class api {
     return task.promise
   }
 
-  static post (token, url, data, options = {}, store) {
-    return axios.post(url, data, api.options(token, options, store))
-  }
-
   static save (token, url, data, options = {}, store) {
     return axios.post(url, data, api.options(token, options, store))
   }

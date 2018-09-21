@@ -33,6 +33,9 @@
       isAutorisationError () {
         return this.error && this.error.status === 401
       }
+    },
+    mounted () {
+      this.$bar.finish()
     }
   }
 </script>

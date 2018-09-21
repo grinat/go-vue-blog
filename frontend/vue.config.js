@@ -9,13 +9,13 @@ const createApiFile = TARGET_NODE
   ? './create-api-server.js'
   : './create-api-client.js'
 
-const target = TARGET_NODE
-  ? 'server'
-  : 'client'
-
 module.exports = {
   configureWebpack: () => ({
-    entry: `./src/entry-${target}`,
+    // include regenerator runtime
+    // https://github.com/vuejs/vue/issues/5559
+    entry: TARGET_NODE
+      ? ["regenerator-runtime/runtime", "./src/entry-server"]
+      : ["regenerator-runtime/runtime", "./src/entry-client"],
     target: TARGET_NODE ? 'node' : 'web',
     node: TARGET_NODE ? undefined : false,
     plugins: [
@@ -24,7 +24,7 @@ module.exports = {
         : new VueSSRClientPlugin()
     ],
     externals: TARGET_NODE ? nodeExternals({
-      whitelist: /\.css$/
+      whitelist: ["regenerator-runtime/runtime", /\.css$/]
     }) : undefined,
     output: {
       libraryTarget: TARGET_NODE
@@ -32,9 +32,9 @@ module.exports = {
         : undefined
     },
     optimization: {
-      splitChunks: undefined,
+      splitChunks: false,
       // https://github.com/nuxt/nuxt.js/issues/1552
-      /*minimizer: [
+      /* minimizer: [
         // we specify a custom UglifyJsPlugin here to get source maps in production
         new UglifyJsPlugin({
           cache: true,

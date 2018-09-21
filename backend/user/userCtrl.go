@@ -66,3 +66,34 @@ func UserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		common.Out(model, w, r)
 	}
 }
+
+func UserUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	model := auth.User{}
+	err := common.FindById(&model, ps.ByName("id"))
+	if err != nil {
+		common.HandleError(err, w, 404)
+		return
+	}
+
+	identify := auth.GetIdentify(r)
+	if !(identify.Id == model.Id || identify.IsAdmin()) {
+		common.HandleError(errors.New("Access denied"), w, 403)
+		return
+	}
+
+	form := identify
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&form)
+	if err != nil {
+		common.HandleError(err, w, 500)
+		return
+	}
+
+	err = model.UpdateProfile(form)
+	if err != nil {
+		common.HandleError(err, w, 500)
+		return
+	}
+
+	common.Out(model, w, r)
+}

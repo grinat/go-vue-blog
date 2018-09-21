@@ -22,6 +22,8 @@ type User struct {
 	Pass        string        `json:"pass" bson:"-"`
 	PassRepeat  string        `json:"passRepeat" bson:"-"`
 	Role        string        `json:"role" bson:"role"`
+	Avatar      string        `json:"avatar" bson:"avatar"`
+	AvatarBig   string        `json:"avatarBig" bson:"avatarBig"`
 	Scenario    string        `bson:"-"`
 }
 
@@ -29,6 +31,9 @@ const RoleUser = "user"
 const RoleAdmin = "admin"
 
 const ScenarioOwnerEdit = "ScenarioOwnerEdit"
+
+const DefaultAvatar = "https://bulma.io/images/placeholders/96x96.png"
+const DefaultAvatarBig = "https://bulma.io/images/placeholders/96x96.png"
 
 func (model *User) updateTime() {
 	model.LastUpdated = int32(time.Now().Unix())
@@ -43,6 +48,8 @@ func (model User) MarshalJSON() ([]byte, error) {
 			"token": model.Token,
 			"lastUpdated": model.LastUpdated,
 			"role": model.Role,
+			"avatar": model.Avatar,
+			"avatarBig": model.AvatarBig,
 		})
 	}
 	return json.Marshal(map[string]interface{}{
@@ -50,6 +57,8 @@ func (model User) MarshalJSON() ([]byte, error) {
 		"name": model.Name,
 		"lastUpdated": model.LastUpdated,
 		"role": model.Role,
+		"avatar": model.Avatar,
+		"avatarBig": model.AvatarBig,
 	})
 }
 
@@ -104,6 +113,7 @@ func (model *User) BeforeCreate() error {
 	model.Role = RoleUser
 	model.Name = common.PreventInjection(model.Name)
 	model.Email = common.PreventInjection(model.Email)
+	model.checkAndUpdateAvatar()
 	user := User{}
 	err := common.FindBy(&user, bson.M{"role":RoleAdmin})
 	if err != nil {
@@ -114,6 +124,7 @@ func (model *User) BeforeCreate() error {
 
 func (model *User) BeforeUpdate() error {
 	model.updateTime()
+	model.checkAndUpdateAvatar()
 	return nil
 }
 
@@ -128,4 +139,40 @@ func (model *User) IsAdmin() bool {
 
 func (model *User) IsGuest() bool {
 	return !(model.Role == RoleUser  || model.Role == RoleAdmin)
+}
+
+func (model *User) checkAndUpdateAvatar() {
+	model.Avatar = common.PreventInjection(model.Avatar)
+	model.AvatarBig = common.PreventInjection(model.AvatarBig)
+	if model.Avatar == "" {
+		model.Avatar = DefaultAvatar
+	}
+	if model.AvatarBig == "" {
+		model.AvatarBig = DefaultAvatarBig
+	}
+
+}
+
+func (model *User) UpdateProfile(form User) error {
+	if form.Avatar != "" {
+		model.Avatar = form.Avatar
+	}
+	if form.AvatarBig != "" {
+		model.AvatarBig = form.AvatarBig
+	}
+	if form.Name != "" {
+		model.Name = common.PreventInjection(form.Name)
+	}
+
+	err := model.BeforeUpdate()
+	if err != nil {
+		return err
+	}
+
+	err = db.C(model.GetCollection()).UpdateId(model.Id, model)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
