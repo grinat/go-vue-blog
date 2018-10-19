@@ -6,6 +6,11 @@ The first registered user becomes the admin role.
 
 Backend on go, frontend on vue ssr, db - mongo.
 
+### Requirements
+Go 1.9.1 or higher
+Node 9 or higher
+Mongo 4.0.2
+
 ### Prod
 Server runned at 9010
 
