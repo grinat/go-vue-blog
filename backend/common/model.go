@@ -15,6 +15,7 @@ type Model interface {
 	GetDB() *mgo.Database
 	BeforeCreate() error
 	BeforeUpdate() error
+	IsHasNotId() bool
 }
 
 // meta, used in reponses
@@ -86,11 +87,13 @@ func FindBy(model Model, q bson.M) error {
 func UpdateByReq(r *http.Request, model Model, id string) (code int, err error) {
 	code = 500
 	db := model.GetDB()
-	q := bson.M{"_id": bson.ObjectIdHex(id)}
-	err = db.C(model.GetCollection()).Find(q).One(model)
-	if err != nil {
-		code = 404
-		return code, err
+	if model.IsHasNotId() {
+		q := bson.M{"_id": bson.ObjectIdHex(id)}
+		err = db.C(model.GetCollection()).Find(q).One(model)
+		if err != nil {
+			code = 404
+			return code, err
+		}
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -121,12 +124,14 @@ func UpdateByReq(r *http.Request, model Model, id string) (code int, err error) 
 // find model in db, if exist - remove
 func RemoveByReq(model Model, id string) (code int, err error) {
 	code = 500
-	db := model.GetDB()
-	q := bson.M{"_id": bson.ObjectIdHex(id)}
-	err = db.C(model.GetCollection()).Find(q).One(model)
-	if err != nil {
-		code = 404
-		return code, err
+	if model.IsHasNotId() {
+		db := model.GetDB()
+		q := bson.M{"_id": bson.ObjectIdHex(id)}
+		err = db.C(model.GetCollection()).Find(q).One(model)
+		if err != nil {
+			code = 404
+			return code, err
+		}
 	}
 
 	err = RemoveById(model, id)

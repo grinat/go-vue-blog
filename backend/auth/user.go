@@ -176,3 +176,18 @@ func (model *User) UpdateProfile(form User) error {
 
 	return nil
 }
+
+// check user can edit article/comment or not
+func (model User) CheckAccessToMaterialOf(createdBy bson.ObjectId) int {
+	if model.IsGuest() == true {
+		return 401
+	}
+	if model.Id == createdBy || model.IsAdmin() == true {
+		return 0
+	}
+	return 403
+}
+
+func (model *User) IsHasNotId() bool{
+	return model.Id == ""
+}

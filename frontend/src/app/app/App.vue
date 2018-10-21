@@ -26,10 +26,16 @@
       },
       onNeedReLogin (needReLogin) {
         if (needReLogin && needReLogin.value === true) {
-          this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
           this.$store.commit('needReLogin', false)
           this.$store.commit('userDelAuthData')
-          this.$router.push({ name: 'user.login' })
+          if (this.$route.name !== 'user.login') {
+            this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
+            this.$router.push({name: 'user.login'}, () => {
+              this.$store.commit('mutateError', null)
+            })
+          } else {
+            this.$store.commit('mutateError', null)
+          }
         }
       }
     }

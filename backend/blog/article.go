@@ -108,3 +108,7 @@ func (model *Article) FillCreatedUsers(list []Article) error {
 
 	return  err
 }
+
+func (model *Article) IsHasNotId() bool{
+	return model.Id == ""
+}

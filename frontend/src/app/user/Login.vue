@@ -40,21 +40,9 @@
     computed: {
       currentUser () {
         return this.$store.getters.userData
-      },
-      error () {
-        return this.$store.getters.getError
       }
     },
-    watch: {
-      'error': 'onError'
-    },
     methods: {
-      onError () {
-        // if auotrization error, unset error for show login form
-        if (this.error && this.error.status === 401) {
-          this.$store.commit('mutateError', null)
-        }
-      },
       onSubmit () {
         this.$store.dispatch('createModel', {
           url: user.login(),

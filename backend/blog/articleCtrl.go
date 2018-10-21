@@ -11,7 +11,11 @@ import (
 
 func ArticleCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	identify := auth.GetIdentify(r)
-	if identify.IsAdmin() == false {
+	if identify.IsGuest() {
+		common.HandleError(nil, w, 401)
+		return
+	}
+	if !identify.IsAdmin() {
 		common.HandleError(nil, w, 403)
 		return
 	}
@@ -28,12 +32,20 @@ func ArticleCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 
 func ArticleUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	identify := auth.GetIdentify(r)
-	if identify.IsAdmin() == false {
-		common.HandleError(nil, w, 403)
+
+	model := Article{}
+
+	err := common.FindById(&model, ps.ByName("id"))
+	if err != nil {
+		common.HandleError(err, w, 404)
+	}
+
+	errCode := identify.CheckAccessToMaterialOf(model.CreatedBy)
+	if errCode > 0 {
+		common.HandleError(nil, w, errCode)
 		return
 	}
 
-	model := Article{}
 	code, err := common.UpdateByReq(r, &model, ps.ByName("id"))
 	if err != nil {
 		common.HandleError(err, w, code)
@@ -44,11 +56,20 @@ func ArticleUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 func ArticleDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	identify := auth.GetIdentify(r)
-	if identify.IsAdmin() == false {
-		common.HandleError(nil, w, 403)
-	}
 
 	model := Article{}
+
+	err := common.FindById(&model, ps.ByName("id"))
+	if err != nil {
+		common.HandleError(err, w, 404)
+	}
+
+	errCode := identify.CheckAccessToMaterialOf(model.CreatedBy)
+	if errCode > 0 {
+		common.HandleError(nil, w, errCode)
+		return
+	}
+
 	code, err := common.RemoveByReq(&model, ps.ByName("id"))
 	if err != nil {
 		common.HandleError(err, w, code)

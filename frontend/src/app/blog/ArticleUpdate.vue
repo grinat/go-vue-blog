@@ -100,7 +100,11 @@
         }).then(({ data: { id, slug } }) => {
           this.$router.push({ name: 'blog.article', params: { id, slug } })
         }).catch(e => {
-          this.$refs.form.handleServerError(e)
+          if (this.$refs.form) {
+            this.$refs.form.handleServerError(e)
+          } else {
+            this.$store.commit('snackMessage', { message: e })
+          }
         })
       }
     },
