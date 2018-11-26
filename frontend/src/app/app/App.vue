@@ -29,7 +29,12 @@
           this.$store.commit('needReLogin', false)
           this.$store.commit('userDelAuthData')
           if (this.$route.name !== 'user.login') {
-            this.$store.commit('userSetRedirectUrl', getRouteCopy(this.$route))
+            this.$store.commit(
+              'userSetRedirectUrl',
+              this.$router.history.pending
+                ? getRouteCopy(this.$router.history.pending)
+                : getRouteCopy(this.$route)
+            )
             this.$router.push({name: 'user.login'}, () => {
               this.$store.commit('mutateError', null)
             })
