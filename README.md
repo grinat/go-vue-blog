@@ -54,6 +54,14 @@ cd frontend && npm run serve
 ```
 
 ### Testing
+With docker
+```
+cd docker/prod
+docker volume create --name=go-vue-blog-mongo-data
+docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml build
+docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml up --abort-on-container-exit  --exit-code-from go-vue-blog.node.testing
+```
+
 On local
 ```
 # install puppeteer
@@ -61,20 +69,13 @@ npm install -g puppeteer
 cd frontend && npm link puppeteer
 
 # By default used prod server at 9010 (see available env in frontend/tests/config.js)
-# run prod server
+# run go prod server
 docker volume create --name=go-vue-blog-mongo-data
 cd docker/prod
 docker-compose -f docker-compose.base.yml -f docker-compose.build.yml up
+
 # run tests
 cd frontend && npm run test
-```
-
-On docker
-```
-cd docker/prod
-docker volume create --name=go-vue-blog-mongo-data
-docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml build
-docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-compose.testing.yml up --abort-on-container-exit  --exit-code-from go-vue-blog.node.testing
 ```
 
 # Roadmap
@@ -87,6 +88,7 @@ docker-compose -f docker-compose.base.yml -f docker-compose.build.yml -f docker-
 - [x] Sort/pagination
 - [x] Upload images
 - [x] Edit profile
+- [ ] Refactor backend
 - [ ] Comment article
 - [ ] List of comments in user profile
 - [ ] Send email on register

@@ -15,6 +15,7 @@
       </div>
       <div class="column is-two-thirds">
         <ul class="pagination-list">
+          <!-- eslint-disable-next-line -->
           <li v-for="page in pageRange">
             <router-link
               v-if="page !== '...'"

@@ -15,4 +15,5 @@ services:
     - TESTING_HEADLESS=true
     - TESTING_URL=http://go-vue-blog.nginx
     networks: [go-vue-blog]
-    command: [sh, -c, "cd /app && (npm i || echo 'fail npm i') && npm run test"]
+# npm i - optional, if failed - probably node_modules exist
+    command: [sh, -c, "cd /app && (npm i || echo 'go-vue-blog.node.testing: fail npm i') && npm run test"]

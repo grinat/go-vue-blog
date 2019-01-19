@@ -58,5 +58,4 @@ describe("Blog", () => {
     await input.uploadFile(filePath)
     await page.waitForSelector(EDITOR_SELECTOR + ' img')
   }, config.timeout)
-
 })

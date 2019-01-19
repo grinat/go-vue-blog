@@ -62,10 +62,12 @@ export function createRouter () {
     ]
   })
 
+  // use for change route and dont call asyncHooks
+  // which prefetching data
   RouterInstance.replace = function (location, onComplete, onAbort) {
     // notify hooks about replace call
     this.isReplace = true
-    // in hooks use this.$router.isReplace
+    // in hooks use this.$router.isReplace ? skipAsync : callAsync
     Router.prototype.replace.call(this, location, onComplete, onAbort)
     // after call unset flag
     this.isReplace = false

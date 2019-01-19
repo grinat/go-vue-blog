@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { createApp } from './app'
+import { createApp, createInjectors } from './app'
 import { handleBeforeEach, routerHandlers } from './utils/routerHandlers'
 import { USER_DATA } from "./configs/config"
 import componentsServer from './components/components-server'
@@ -16,7 +16,8 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default context => {
   return new Promise((resolve, reject) => {
     const s = isDev && Date.now()
-    const { app, router, store } = createApp()
+    const {router, store} = createInjectors()
+    const app = createApp({router, store})
     const { url, cookies } = context
     // set cookies
     if (cookies && cookies[USER_DATA]) {

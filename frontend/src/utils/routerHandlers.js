@@ -1,5 +1,8 @@
 import { handleAccessError } from './errorHandlers'
 
+// executes async data function
+// in component and nested mixins
+// on route change
 export function routerHandlers (c, { store, from, to }) {
   let methods = Object.create(null) // c.methods
   if (c.mixins) {
@@ -33,6 +36,8 @@ export function routerHandlers (c, { store, from, to }) {
   return Promise.resolve(true)
 }
 
+// called Before Each route
+// check user access to new routes and etc...
 export function handleBeforeEach (to, from, next, store) {
   if (to.meta && to.meta.accessHandler) {
     to.meta.accessHandler({ store, from, to, next })
@@ -55,4 +60,69 @@ export function handleOwnerAccess ({ store, from, to, next }) {
     next({ name: 'blog.home' })
     store.commit('snackMessage', { message: 'Access denied' })
   }
+}
+
+// Add router hook for handling asyncData
+export function attachBeforeResolve ({router, store, bar}) {
+  router.beforeResolve((to, from, next) => {
+    const matched = router.getMatchedComponents(to)
+    const prevMatched = router.getMatchedComponents(from)
+    let diffed = false
+    const activated = matched.filter((c, i) => {
+      return diffed || (diffed = (prevMatched[i] !== c))
+    })
+    if (!activated.length) {
+      return next()
+    }
+
+    bar.start()
+    Promise.all(
+      activated.map(c => routerHandlers(c, { store, from, to }))
+    ).then(() => {
+      if (to && to.name && to.name !== 'error') {
+        store.commit('mutateError', null)
+      }
+      bar.finish()
+      next()
+    }).catch(() => {
+      bar.finish()
+      next()
+    })
+  })
+}
+
+export function installRouterMixins (vm, {bar}) {
+  // a global mixin that calls `asyncData` when a route component's params change
+  vm.mixin({
+    beforeRouteUpdate (to, from, next) {
+      // skip on router.replace()
+      if (this.$router.isReplace) {
+        next()
+        return
+      }
+
+      const { asyncData } = this.$options
+      bar.start()
+      if (asyncData) {
+        asyncData({
+          store: this.$store,
+          route: to,
+          fromRoute: from,
+          methods: this,
+          ctx: this
+        }).then(() => {
+          if (to && to.name && to.name !== 'error') {
+            this.$store.commit('mutateError', null)
+          }
+          bar.finish()
+          next()
+        }).catch(() => {
+          bar.finish()
+          next()
+        })
+      } else {
+        next()
+      }
+    }
+  })
 }
